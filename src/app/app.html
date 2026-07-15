@@ -1,0 +1,108 @@
+<ng-container *ngIf="{ logado: (authService.isLoggedIn$ | async) && !isLoginRoute } as sessao">
+
+  <div class="flex h-screen font-sans text-neo-ink overflow-hidden" [ngClass]="sessao.logado ? 'bg-neo-paper' : 'bg-transparent'">
+
+    <aside *ngIf="sessao.logado" [ngClass]="menuMinimizado ? 'w-20' : 'w-72'" class="bg-neo-paper flex flex-col border-r-[3px] border-neo-ink relative z-20 transition-all duration-300">
+
+      <button (click)="toggleMenuLateral()" title="Recolher/Expandir Menu"
+              class="absolute -right-4 top-7 z-50 neo-btn !p-0 w-8 h-8 !rounded-full !shadow-[2px_2px_0px_0px_#1D2B1F] hover:!translate-x-[2px] hover:!translate-y-[2px]">
+        <svg [ngClass]="menuMinimizado ? 'rotate-180' : ''" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <div [ngClass]="menuMinimizado ? 'justify-center px-2' : 'px-6'" class="h-24 flex items-center border-b-[3px] border-neo-ink overflow-hidden transition-all duration-300">
+        <div class="flex items-center min-w-0">
+          <h1 *ngIf="!menuMinimizado" class="font-serif font-black text-3xl tracking-tighter text-neo-ink ml-2 animate-fade-in text-ellipsis overflow-hidden whitespace-nowrap">
+            Pesca<span class="text-neo-lime" style="text-shadow: 1px 1px 0px #1D2B1F, -1px -1px 0px #1D2B1F, 1px -1px 0px #1D2B1F, -1px 1px 0px #1D2B1F;">Brasil</span>
+          </h1>
+        </div>
+      </div>
+
+      <nav class="flex-1 px-4 py-8 space-y-3 overflow-y-auto">
+        <a routerLink="/mapa" routerLinkActive="bg-neo-lime border-[3px] border-neo-ink shadow-[4px_4px_0px_0px_#1D2B1F] !translate-x-0"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neo-ink font-bold border-[3px] border-transparent hover:border-neo-ink hover:bg-white hover:-translate-y-1 transition-all duration-200 group cursor-pointer" [title]="menuMinimizado ? 'Mapa Interativo' : ''">
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+          <span *ngIf="!menuMinimizado" class="animate-fade-in">Mapa Interativo</span>
+        </a>
+
+        <a routerLink="/diario" routerLinkActive="bg-neo-lime border-[3px] border-neo-ink shadow-[4px_4px_0px_0px_#1D2B1F] !translate-x-0"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neo-ink font-bold border-[3px] border-transparent hover:border-neo-ink hover:bg-white hover:-translate-y-1 transition-all duration-200 group cursor-pointer" [title]="menuMinimizado ? 'Diário de Pesca' : ''">
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <span *ngIf="!menuMinimizado" class="animate-fade-in">Diário de Pesca</span>
+        </a>
+
+        <a routerLink="/especies" routerLinkActive="bg-neo-lime border-[3px] border-neo-ink shadow-[4px_4px_0px_0px_#1D2B1F] !translate-x-0"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neo-ink font-bold border-[3px] border-transparent hover:border-neo-ink hover:bg-white hover:-translate-y-1 transition-all duration-200 group cursor-pointer" [title]="menuMinimizado ? 'Catálogo de Espécies' : ''">
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+          <span *ngIf="!menuMinimizado" class="animate-fade-in">Catálogo de Espécies</span>
+        </a>
+
+        <a routerLink="/ranking" routerLinkActive="bg-neo-lime border-[3px] border-neo-ink shadow-[4px_4px_0px_0px_#1D2B1F] !translate-x-0"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neo-ink font-bold border-[3px] border-transparent hover:border-neo-ink hover:bg-white hover:-translate-y-1 transition-all duration-200 group cursor-pointer" [title]="menuMinimizado ? 'Ranking de Peixes' : ''">
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+          <span *ngIf="!menuMinimizado" class="animate-fade-in">Ranking</span>
+        </a>
+
+        <a *ngIf="authService.isAdmin()" routerLink="/regulations" routerLinkActive="bg-neo-lime border-[3px] border-neo-ink shadow-[4px_4px_0px_0px_#1D2B1F] !translate-x-0"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-neo-ink font-bold border-[3px] border-transparent hover:border-neo-ink hover:bg-white hover:-translate-y-1 transition-all duration-200 group cursor-pointer">
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          <span *ngIf="!menuMinimizado" class="animate-fade-in">Leis e Defesos</span>
+        </a>
+
+        <div class="pt-4 border-t-[3px] border-neo-ink my-4"></div>
+
+        <div *ngIf="authService.isAdmin()" class="flex flex-col">
+          <button (click)="toggleSubmenu()" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-neo-ink font-bold border-[3px] border-transparent hover:border-neo-ink hover:bg-white hover:-translate-y-1 transition-all duration-200 group cursor-pointer focus:outline-none">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              <span *ngIf="!menuMinimizado" class="animate-fade-in">Cadastros</span>
+            </div>
+            <svg *ngIf="!menuMinimizado" [class.rotate-180]="submenuTecnicoAberto" class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+
+          <div *ngIf="submenuTecnicoAberto && !menuMinimizado" class="pl-9 pr-2 py-2 flex flex-col gap-2 border-l-[3px] border-neo-ink ml-6 mt-2 animate-fade-in font-bold">
+            <a routerLink="/rivers" routerLinkActive="bg-neo-lime border-[2px] border-neo-ink shadow-[2px_2px_0px_0px_#1D2B1F]" class="text-sm text-neo-ink px-3 py-1.5 rounded-lg border-[2px] border-transparent hover:border-neo-ink hover:bg-white transition-all cursor-pointer">Rios</a>
+            <a routerLink="/fishing-spots" routerLinkActive="bg-neo-lime border-[2px] border-neo-ink shadow-[2px_2px_0px_0px_#1D2B1F]" class="text-sm text-neo-ink px-3 py-1.5 rounded-lg border-[2px] border-transparent hover:border-neo-ink hover:bg-white transition-all cursor-pointer">Pontos de Pesca</a>
+            <a routerLink="/fishes" routerLinkActive="bg-neo-lime border-[2px] border-neo-ink shadow-[2px_2px_0px_0px_#1D2B1F]" class="text-sm text-neo-ink px-3 py-1.5 rounded-lg border-[2px] border-transparent hover:border-neo-ink hover:bg-white transition-all cursor-pointer">Peixes</a>
+            <a routerLink="/baits" routerLinkActive="bg-neo-lime border-[2px] border-neo-ink shadow-[2px_2px_0px_0px_#1D2B1F]" class="text-sm text-neo-ink px-3 py-1.5 rounded-lg border-[2px] border-transparent hover:border-neo-ink hover:bg-white transition-all cursor-pointer">Iscas</a>
+            <a routerLink="/equipments" routerLinkActive="bg-neo-lime border-[2px] border-neo-ink shadow-[2px_2px_0px_0px_#1D2B1F]" class="text-sm text-neo-ink px-3 py-1.5 rounded-lg border-[2px] border-transparent hover:border-neo-ink hover:bg-white transition-all cursor-pointer">Equipamentos</a>
+            <a routerLink="/river-species" routerLinkActive="bg-neo-lime border-[2px] border-neo-ink shadow-[2px_2px_0px_0px_#1D2B1F]" class="text-sm text-neo-ink px-3 py-1.5 rounded-lg border-[2px] border-transparent hover:border-neo-ink hover:bg-white transition-all cursor-pointer">Associações</a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="p-6 border-t-[3px] border-neo-ink flex flex-col gap-4 items-center justify-between bg-[#ffffff]">
+        <div class="flex items-center gap-3 w-full min-w-0">
+          <div class="w-12 h-12 flex-shrink-0 rounded-full bg-neo-lime flex items-center justify-center text-neo-ink font-black border-[3px] border-neo-ink shadow-[3px_3px_0px_0px_#1D2B1F]">
+            {{ getIniciais() }}
+          </div>
+          <div *ngIf="!menuMinimizado" class="truncate flex-1 animate-fade-in">
+            <p class="text-neo-ink font-black text-sm truncate uppercase tracking-widest" [title]="authService.getUserName()">
+              {{ authService.getUserName() }}
+            </p>
+          </div>
+        </div>
+        <button (click)="sair()" [title]="menuMinimizado ? 'Sair do Sistema' : ''" class="neo-btn neo-btn-outline w-full text-xs !py-2">
+          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+          <span *ngIf="!menuMinimizado">Sair</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative overflow-hidden bg-neo-paper">
+
+      <header *ngIf="sessao.logado" class="h-24 bg-neo-paper border-b-[3px] border-neo-ink flex items-center justify-end px-8 z-10">
+        <button routerLink="/diario/novo" class="neo-btn">
+          Cadastrar Captura
+        </button>
+      </header>
+
+      <div class="flex-1 overflow-auto h-full p-8 relative">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+
+  </div>
+
+</ng-container>

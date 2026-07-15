@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+
+@import "tailwindcss";
+
+@theme {
+  --color-neo-paper: #F7F0E6;
+  --color-neo-ink: #1D2B1F;
+  --color-neo-lime: #BFEA4B;
+  --color-neo-rust: #C53A20;
+  --color-neo-muted: #6B7A6D;
+
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Fraunces", serif;
+}
+
+body {
+  background-color: var(--color-neo-paper);
+  color: var(--color-neo-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.neo-card {
+  background-color: #F7F0E6;
+  border: 3px solid var(--color-neo-ink);
+  border-radius: 1rem;
+  box-shadow: 8px 8px 0px 0px var(--color-neo-ink);
+}
+
+.neo-input {
+  width: 100%;
+  background-color: #ffffff;
+  border: 3px solid var(--color-neo-ink);
+  border-radius: 0.75rem;
+  color: var(--color-neo-ink);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.15s ease-out;
+}
+.neo-input:focus {
+  outline: none;
+  box-shadow: 4px 4px 0px 0px var(--color-neo-ink);
+  transform: translate(-2px, -2px);
+}
+
+.neo-btn {
+  background-color: var(--color-neo-lime);
+  color: var(--color-neo-ink);
+  border: 3px solid var(--color-neo-ink);
+  border-radius: 9999px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 4px 4px 0px 0px var(--color-neo-ink);
+  transition: all 0.15s ease-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.neo-btn:hover:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--color-neo-ink);
+}
+.neo-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--color-neo-ink);
+}
+.neo-btn-danger {
+  background-color: var(--color-neo-rust);
+  color: #ffffff;
+}
+.neo-btn-outline {
+  background-color: var(--color-neo-paper);
+}
+.neo-table-container {
+  background-color: var(--color-neo-paper);
+  border: 3px solid var(--color-neo-ink);
+  border-radius: 1rem;
+  box-shadow: 6px 6px 0px 0px var(--color-neo-ink);
+  overflow: hidden;
+}
+.neo-table th {
+  background-color: var(--color-neo-lime);
+  border-bottom: 3px solid var(--color-neo-ink);
+  color: var(--color-neo-ink);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.5rem;
+}
+.neo-table td {
+  border-bottom: 2px solid var(--color-neo-ink);
+  padding: 1rem 1.5rem;
+}
+.neo-table tr:last-child td {
+  border-bottom: none;
+}
+.neo-table tr:hover td {
+  background-color: #ffffff;
+}
+
+
+@keyframes jumpAndDive {
+  0%   { transform: translateY(0px) scale(1) rotate(-15deg); opacity: 1; }
+  30%  { transform: translateY(-55px) scale(1.2) rotate(0deg); opacity: 1; }
+  60%  { transform: translateY(-5px) scale(1) rotate(55deg); opacity: 1; }
+  100% { transform: translateY(15px) scale(0.6) rotate(65deg); opacity: 0; }
+}
+
+@keyframes rippleEffect {
+  0%, 55% {
+    transform: scale(0.2) scaleY(0.3);
+    opacity: 0;
+    border-width: 4px;
+    border-color: var(--color-neo-ink);
+    background-color: white;
+  }
+  60% {
+    transform: scale(1) scaleY(0.3);
+    opacity: 1;
+    border-width: 4px;
+    background-color: white;
+  }
+  80% {
+    transform: scale(2.5) scaleY(0.3);
+    opacity: 1;
+    border-width: 4px;
+    background-color: transparent;
+  }
+  100% {
+    transform: scale(4) scaleY(0.3);
+    opacity: 0;
+    border-width: 1px;
+    background-color: transparent;
+  }
+}
+
+.fish-escaped .fish-body {
+  animation: jumpAndDive 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.fish-escaped .water-ripple {
+  animation: rippleEffect 1.5s linear forwards;
+}
