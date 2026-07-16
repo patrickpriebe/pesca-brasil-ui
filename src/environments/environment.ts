@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'URL_DA_NUVEM_VAI_AQUI',
+  apiUrl: 'https://pesca-brasil-api.onrender.com',
 };
