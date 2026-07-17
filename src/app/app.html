@@ -98,6 +98,10 @@
         </button>
       </header>
 
+      <button (click)="throwTestError()" style="padding: 10px; background: red; color: white;">
+        Testar Caixa Preta (Sentry)
+      </button>
+
       <div class="flex-1 overflow-auto h-full p-8 relative">
         <router-outlet></router-outlet>
       </div>
@@ -106,7 +110,3 @@
   </div>
 
 </ng-container>
-
-<button (click)="throwTestError()" style="padding: 10px; background: red; color: white;">
-  Testar Caixa Preta (Sentry)
-</button>
