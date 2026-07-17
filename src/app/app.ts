@@ -50,4 +50,8 @@ export class AppComponent implements OnInit {
 
     return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
   }
+
+  public throwTestError(): void {
+    throw new Error("BOOM! Teste de erro no Pesca Brasil!");
+  }
 }
