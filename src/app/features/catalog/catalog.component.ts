@@ -12,7 +12,7 @@ import { Fish } from '../../core/models/api-models';
 
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 shrink-0">
         <div>
-          <h2 class="text-4xl font-serif font-black text-neo-ink tracking-tight uppercase">Enciclopédia</h2>
+          <h2 class="text-4xl font-serif font-black text-neo-ink tracking-tight uppercase">Fisgadas</h2>
           <p class="text-neo-ink font-bold text-sm mt-2 uppercase tracking-widest">Catálogo Oficial de Espécies</p>
         </div>
 
@@ -53,7 +53,7 @@ import { Fish } from '../../core/models/api-models';
       </div>
 
       <div *ngIf="carregando" class="text-center py-12 font-black text-neo-ink uppercase tracking-widest">
-        Carregando enciclopédia...
+        Carregando catálogo de espécies...
       </div>
       <div *ngIf="!carregando && peixesFiltrados.length === 0" class="neo-card bg-white text-center p-12 my-8 font-black text-neo-ink uppercase tracking-widest">
         Nenhuma espécie encontrada.

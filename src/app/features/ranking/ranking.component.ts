@@ -60,9 +60,7 @@ type CategoriaRanking = 'COMPRIMENTO' | 'PESO' | 'CAPTURAS';
       </div>
 
       <div *ngIf="!carregando && (top3Peixes.length === 0 && rankPescadores.length === 0)" class="flex-1 flex flex-col items-center justify-center neo-card bg-white p-12 text-center my-4">
-        <span class="text-6xl mb-4 font-serif">🏆</span>
         <h3 class="text-2xl font-black text-neo-ink mb-2 uppercase">Nenhum registro</h3>
-        <p class="text-neo-ink font-bold">A história ainda será escrita neste clube.</p>
       </div>
 
       <div class="flex-1 animate-scale-up" *ngIf="!carregando && (categoriaAtual === 'COMPRIMENTO' || categoriaAtual === 'PESO') && top3Peixes.length > 0">

@@ -34,8 +34,7 @@ import { CatchRecord } from '../../core/models/api-models';
       </div>
 
       <div *ngIf="!carregando && capturas.length === 0" class="max-w-6xl mx-auto w-full flex-1 flex flex-col items-center justify-center neo-card bg-white p-12 text-center my-4">
-        <span class="text-6xl mb-4">🎣</span>
-        <h3 class="text-2xl font-black text-neo-ink mb-2 uppercase tracking-widest">Nenhum troféu encontrado</h3>
+        <h3 class="text-2xl font-black text-neo-ink mb-2 uppercase tracking-widest">Nenhuma captura encontrada</h3>
         <p class="text-neo-ink font-bold">O diário está vazio ou a busca não encontrou resultados.</p>
       </div>
 
