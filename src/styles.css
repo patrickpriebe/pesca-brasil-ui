@@ -148,3 +148,22 @@ body {
 .fish-escaped .water-ripple {
   animation: rippleEffect 1.5s linear forwards;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-left: 3px solid var(--color-neo-ink);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-neo-lime);
+  border-left: 3px solid var(--color-neo-ink);
+  border-bottom: 3px solid var(--color-neo-ink);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neo-rust);
+}
