@@ -106,7 +106,6 @@ body {
   background-color: #ffffff;
 }
 
-
 @keyframes jumpAndDive {
   0%   { transform: translateY(0px) scale(1) rotate(-15deg); opacity: 1; }
   30%  { transform: translateY(-55px) scale(1.2) rotate(0deg); opacity: 1; }
@@ -169,48 +168,51 @@ body {
 }
 
 .neo-select {
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231D2B1F' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 1.2em;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231D2B1F' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 1.2em !important;
   padding-right: 3rem !important;
 }
 
 .neo-select::-ms-expand {
-  display: none;
+  display: none !important;
 }
 
-.neo-input[type="date"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  opacity: 0.8;
-  transition: all 0.2s;
+.neo-input[type="date"]::-webkit-calendar-picker-indicator,
+.neo-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer !important;
+  opacity: 0.8 !important;
+  transition: all 0.2s !important;
 }
-.neo-input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
-  transform: scale(1.15);
+.neo-input[type="date"]::-webkit-calendar-picker-indicator:hover,
+.neo-input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1 !important;
+  transform: scale(1.15) !important;
 }
 
 .neo-select-multiple {
-  appearance: none;
-  -webkit-appearance: none;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-image: none !important;
 }
 
 .neo-select-multiple option {
-  padding: 0.5rem 0.75rem;
-  margin-bottom: 0.5rem;
-  border-radius: 0.5rem;
-  border: 2px solid transparent;
-  font-weight: 700;
-  color: var(--color-neo-muted);
-  cursor: pointer;
-  transition: all 0.15s ease-out;
+  padding: 0.5rem 0.75rem !important;
+  margin-bottom: 0.5rem !important;
+  border-radius: 0.5rem !important;
+  border: 2px solid transparent !important;
+  font-weight: 700 !important;
+  color: var(--color-neo-muted) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease-out !important;
 }
 
 .neo-select-multiple option:hover {
-  background-color: var(--color-neo-paper);
-  color: var(--color-neo-ink);
+  background-color: var(--color-neo-paper) !important;
+  color: var(--color-neo-ink) !important;
 }
 
 .neo-select-multiple option:checked {
