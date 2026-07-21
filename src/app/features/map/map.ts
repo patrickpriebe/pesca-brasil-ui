@@ -225,8 +225,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   expandido: boolean = false;
   widgetAberto: boolean = true;
 
-  posX: number = 5000;
-  posY: number = 24;
+  posX: number = 24;
+  posY: number = 5000;
   arrastando: boolean = false;
   offsetX: number = 0;
   offsetY: number = 0;
