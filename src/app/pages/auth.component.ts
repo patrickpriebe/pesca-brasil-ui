@@ -159,16 +159,41 @@ export class AuthComponent implements OnInit{
     this.carregando = false;
     this.sucesso = false;
     this.recaptchaToken = null;
-
-    try {
-      if (err && err.error && typeof err.error === 'string') {
-        this.mensagem = err.error;
-      } else {
-        this.mensagem = msgPadrao;
-      }
-    } catch (e) {
-      this.mensagem = 'Ocorreu um erro de comunicação.';
+    
+    let erroBackend = '';
+    if (err && err.error && typeof err.error === 'string') {
+      erroBackend = err.error.toLowerCase();
+    } else if (err && err.error && err.error.message) {
+      erroBackend = err.error.message.toLowerCase();
     }
+
+    if (erroBackend.includes('bad credentials')) {
+      this.mensagem = 'E-mail ou senha incorretos.';
+    }
+    else if (erroBackend.includes('user is disabled') || erroBackend.includes('not enabled')) {
+      this.mensagem = 'Sua conta ainda não foi ativada. Verifique o seu e-mail.';
+    }
+    else if (erroBackend.includes('locked')) {
+      this.mensagem = 'Conta bloqueada por segurança. Tente novamente mais tarde.';
+    }
+    else if (erroBackend.includes('already exists') || erroBackend.includes('duplicate')) {
+      this.mensagem = 'Este e-mail já está cadastrado em nosso sistema.';
+    }
+    else if (erroBackend.includes('recaptcha')) {
+      this.mensagem = 'Falha na verificação de segurança. Refaça o desafio do robô.';
+    }
+
+    else if (err.status === 0 || err.status === 504) {
+      this.mensagem = 'Sem conexão com o servidor. Tente novamente em instantes.';
+    }
+    else if (err.status === 500) {
+      this.mensagem = 'Ocorreu um erro interno. Nossa equipe já foi notificada!';
+    }
+
+    else {
+      this.mensagem = msgPadrao;
+    }
+
     this.cdr.detectChanges();
   }
 
