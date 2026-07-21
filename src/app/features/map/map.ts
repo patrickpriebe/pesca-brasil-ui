@@ -1,5 +1,14 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  ViewChild,
+  OnDestroy,
+  ChangeDetectorRef,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as L from 'leaflet';
 import { FishingSpotService } from '../../core/services/fishing-spot.service';
 
@@ -94,18 +103,19 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
 
           <div *ngIf="!carregandoClima && climaAtual">
             <div class="flex justify-between items-center w-full">
-              <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
-                <span class="text-4xl drop-shadow-[2px_2px_0px_#1D2B1F] shrink-0">{{
-                  obterIconeClima(climaAtual.weathercode)
-                }}</span>
-                <div class="min-w-0">
-                  <p class="text-2xl font-black font-mono tracking-tighter truncate">
+              <div class="flex items-center gap-3">
+                <!-- SVG Dinâmico do Clima Atual -->
+                <div
+                  class="w-12 h-12 text-neo-ink drop-shadow-[2px_2px_0px_#1D2B1F] shrink-0"
+                  [innerHTML]="obterIconeClima(climaAtual.weathercode)"
+                ></div>
+                <div>
+                  <p class="text-2xl font-black font-mono tracking-tighter">
                     {{ climaAtual.temperature
                     }}<span class="text-base text-neo-muted font-bold font-sans">°C</span>
                   </p>
                   <p
-                    class="text-[9px] text-neo-ink font-bold uppercase tracking-widest mt-1 truncate"
-                    title="Vento: {{ climaAtual.windspeed }} KM/H"
+                    class="text-[9px] text-neo-ink font-bold uppercase tracking-widest mt-1 whitespace-nowrap"
                   >
                     Vento: {{ climaAtual.windspeed }} KM/H
                   </p>
@@ -135,7 +145,11 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
                 class="flex justify-between items-center font-bold bg-neo-paper border-2 border-neo-ink px-3 py-2"
               >
                 <span class="w-10 uppercase text-xs">{{ prev.diaSemana }}</span>
-                <span class="text-xl drop-shadow-[1px_1px_0px_#1D2B1F]">{{ prev.icone }}</span>
+                <!-- SVG Dinâmico da Previsão -->
+                <div
+                  class="w-6 h-6 text-neo-ink drop-shadow-[1px_1px_0px_#1D2B1F]"
+                  [innerHTML]="prev.icone"
+                ></div>
                 <div class="flex gap-2 text-xs font-mono">
                   <span class="text-neo-muted" title="Mínima">{{ prev.min }}°</span>
                   <span class="text-neo-ink font-black" title="Máxima">{{ prev.max }}°</span>
@@ -197,6 +211,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   constructor(
     private fishingSpotService: FishingSpotService,
     private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngAfterViewInit(): void {
@@ -243,8 +258,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:resize')
   onWindowResize(): void {
-    this.ajustarLimites();
+    setTimeout(() => {
+      this.ajustarLimites();
+      this.cdr.detectChanges();
+    }, 50);
   }
+
   @HostListener('document:mouseup')
   @HostListener('document:touchend')
   pararArrasto(): void {
@@ -260,8 +279,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const maxX = container.clientWidth - widget.offsetWidth - 16;
     const maxY = container.clientHeight - widget.offsetHeight - 16;
 
-    if (this.posX > maxX) this.posX = Math.max(16, maxX);
-    if (this.posY > maxY) this.posY = Math.max(16, maxY);
+    let mudou = false;
+
+    if (this.posX > maxX) {
+      this.posX = Math.max(16, maxX);
+      mudou = true;
+    }
+    if (this.posY > maxY) {
+      this.posY = Math.max(16, maxY);
+      mudou = true;
+    }
+
+    if (mudou) {
+      this.cdr.detectChanges();
+    }
   }
 
   toggleExpandir(): void {
@@ -403,15 +434,35 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     } catch (e) {}
   }
 
-  obterIconeClima(codigoMeteo: number): string {
-    if (codigoMeteo === 0) return '☀️';
-    if (codigoMeteo >= 1 && codigoMeteo <= 3) return '⛅';
-    if (codigoMeteo >= 45 && codigoMeteo <= 48) return '🌫️';
-    if (codigoMeteo >= 51 && codigoMeteo <= 67) return '🌧️';
-    if (codigoMeteo >= 71 && codigoMeteo <= 77) return '❄️';
-    if (codigoMeteo >= 80 && codigoMeteo <= 82) return '🌦️';
-    if (codigoMeteo >= 95) return '⛈️';
-    return '☁️';
+  obterIconeClima(codigoMeteo: number): SafeHtml {
+    let svg = '';
+
+    if (codigoMeteo === 0) {
+      svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+    }
+    else if (codigoMeteo >= 1 && codigoMeteo <= 3) {
+      svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.94 13A5 5 0 0 0 6 15"/><path d="M12 17h8.5a3.5 3.5 0 0 0 0-7h-.5"/></svg>`;
+    }
+    else if (codigoMeteo >= 45 && codigoMeteo <= 48) {
+      svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M4 14h16"/><path d="M4 18h16"/><path d="M8 10h8"/><path d="M16 10a4 4 0 0 0-8 0"/></svg>`;
+    }
+    else if (codigoMeteo >= 51 && codigoMeteo <= 67) {
+      svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M16 14v6"/><path d="M8 14v6"/><path d="M12 16v6"/></svg>`;
+    }
+    else if (codigoMeteo >= 71 && codigoMeteo <= 77) {
+      svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M12 17v5"/><path d="M12 2v5"/><path d="m16 2-4 4-4-4"/><path d="m8 22 4-4 4 4"/><path d="m2 12 5 .01"/><path d="m22 12-5 .01"/><path d="m2 16 4-4-4-4"/><path d="m22 8-4 4 4 4"/></svg>`;
+    }
+    else if (codigoMeteo >= 80 && codigoMeteo <= 82) {
+      svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M8 15v2"/><path d="M16 15v2"/><path d="M12 17v2"/></svg>`;
+    }
+    else if (codigoMeteo >= 95) {
+      svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m13 14-4 5h6l-4 5"/></svg>`;
+    }
+    else {
+      svg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`;
+    }
+
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
   }
 
   private calcularFaseLua(): void {
