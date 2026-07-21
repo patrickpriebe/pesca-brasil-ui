@@ -9,68 +9,131 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
   imports: [CommonModule],
   template: `
     <div class="h-full w-full flex flex-col relative animate-fade-in">
-
       <div class="mb-6 shrink-0">
-        <h2 class="text-4xl md:text-5xl font-serif font-black text-neo-ink tracking-tighter uppercase">Mapa da Pesca</h2>
-        <p class="text-neo-ink font-bold text-sm mt-2 uppercase tracking-widest">Pontos estratégicos</p>
+        <h2
+          class="text-4xl md:text-5xl font-serif font-black text-neo-ink tracking-tighter uppercase"
+        >
+          Mapa da Pesca
+        </h2>
+        <p class="text-neo-ink font-bold text-sm mt-2 uppercase tracking-widest">
+          Pontos estratégicos
+        </p>
       </div>
 
-      <div class="flex-1 w-full border-[4px] border-neo-ink bg-neo-paper shadow-[8px_8px_0px_0px_#1D2B1F] relative mb-3 mr-3 min-h-[400px]">
-
+      <div
+        class="flex-1 w-full border-[4px] border-neo-ink bg-neo-paper shadow-[8px_8px_0px_0px_#1D2B1F] relative mb-3 mr-3 min-h-[400px]"
+      >
         <div #mapElement class="h-full w-full z-0 cursor-crosshair"></div>
 
-        <div class="absolute top-4 right-4 z-[400] bg-neo-lime border-[3px] border-neo-ink px-4 py-2 text-neo-ink text-xs font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#1D2B1F] flex items-center gap-2">
+        <div
+          class="absolute top-4 right-4 z-[400] bg-neo-lime border-[3px] border-neo-ink px-4 py-2 text-neo-ink text-xs font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#1D2B1F] flex items-center gap-2"
+        >
           <span class="w-3 h-3 rounded-full bg-neo-ink animate-pulse"></span>
           Conectado
         </div>
 
-        <div #climaWidget
-             class="absolute z-[1000] bg-white border-[4px] border-neo-ink pb-6 px-6 shadow-[6px_6px_0px_0px_#1D2B1F] w-72 text-neo-ink font-sans"
-             [style.left.px]="posX" [style.top.px]="posY"
-             [class.transition-all]="!arrastando"
-             [class.duration-300]="!arrastando"
-             [ngClass]="carregandoClima ? 'opacity-90 scale-95' : 'opacity-100 scale-100'">
-
-          <div class="w-full pt-4 pb-3 cursor-grab active:cursor-grabbing flex justify-center items-center hover:bg-neo-paper transition-colors group"
-               (mousedown)="iniciarArrasto($event)" (touchstart)="iniciarArrasto($event)" title="Arraste para mover">
-            <div class="w-16 h-2 bg-neo-ink/20 group-hover:bg-neo-ink transition-colors rounded-full pointer-events-none"></div>
+        <div
+          #climaWidget
+          class="absolute z-[1000] bg-white border-[4px] border-neo-ink pb-6 px-4 md:px-6 shadow-[6px_6px_0px_0px_#1D2B1F] w-72 max-w-[calc(100vw-2rem)] text-neo-ink font-sans"
+          [style.left.px]="posX"
+          [style.top.px]="posY"
+          [class.transition-all]="!arrastando"
+          [class.duration-300]="!arrastando"
+          [ngClass]="carregandoClima ? 'opacity-90 scale-95' : 'opacity-100 scale-100'"
+        >
+          <div
+            class="w-full pt-4 pb-3 cursor-grab active:cursor-grabbing flex justify-center items-center hover:bg-neo-paper transition-colors group"
+            (mousedown)="iniciarArrasto($event)"
+            (touchstart)="iniciarArrasto($event)"
+            title="Arraste para mover"
+          >
+            <div
+              class="w-16 h-2 bg-neo-ink/20 group-hover:bg-neo-ink transition-colors rounded-full pointer-events-none"
+            ></div>
           </div>
 
           <div class="flex justify-between items-start mb-4 border-b-[3px] border-neo-ink pb-4">
             <div class="w-[80%]">
-              <p class="text-[10px] text-neo-muted uppercase tracking-widest font-black mb-1">Coordenada Atual</p>
-              <h3 class="text-sm font-black text-neo-ink truncate pr-2 uppercase" [title]="localAtualNome">{{ localAtualNome }}</h3>
+              <p class="text-[10px] text-neo-muted uppercase tracking-widest font-black mb-1">
+                Coordenada Atual
+              </p>
+              <h3
+                class="text-sm font-black text-neo-ink truncate pr-2 uppercase"
+                [title]="localAtualNome"
+              >
+                {{ localAtualNome }}
+              </h3>
             </div>
 
-            <button (click)="obterLocalizacaoNavegador()" class="p-2 border-[2px] border-neo-ink bg-neo-paper hover:bg-neo-lime transition-colors shrink-0 shadow-[2px_2px_0px_0px_#1D2B1F] hover:-translate-y-[1px] hover:-translate-x-[1px]" title="Minha localização">
-              <svg class="w-4 h-4 text-neo-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <button
+              (click)="obterLocalizacaoNavegador()"
+              class="p-2 border-[2px] border-neo-ink bg-neo-paper hover:bg-neo-lime transition-colors shrink-0 shadow-[2px_2px_0px_0px_#1D2B1F] hover:-translate-y-[1px] hover:-translate-x-[1px]"
+              title="Minha localização"
+            >
+              <svg
+                class="w-4 h-4 text-neo-ink"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="3"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
             </button>
           </div>
 
           <div *ngIf="carregandoClima" class="flex justify-center py-6">
-            <div class="w-8 h-8 border-[4px] border-neo-paper border-t-neo-ink rounded-full animate-spin"></div>
+            <div
+              class="w-8 h-8 border-[4px] border-neo-paper border-t-neo-ink rounded-full animate-spin"
+            ></div>
           </div>
 
           <div *ngIf="!carregandoClima && climaAtual">
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-3">
-                <span class="text-4xl drop-shadow-[2px_2px_0px_#1D2B1F]">{{ obterIconeClima(climaAtual.weathercode) }}</span>
-                <div>
-                  <p class="text-3xl font-black font-mono tracking-tighter">{{ climaAtual.temperature }}<span class="text-base text-neo-muted font-bold font-sans">°C</span></p>
-                  <p class="text-[10px] text-neo-ink font-bold uppercase tracking-widest mt-1">Vento: {{ climaAtual.windspeed }} KM/H</p>
+            <div class="flex justify-between items-center w-full">
+              <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
+                <span class="text-4xl drop-shadow-[2px_2px_0px_#1D2B1F] shrink-0">{{
+                  obterIconeClima(climaAtual.weathercode)
+                }}</span>
+                <div class="min-w-0">
+                  <p class="text-2xl font-black font-mono tracking-tighter truncate">
+                    {{ climaAtual.temperature
+                    }}<span class="text-base text-neo-muted font-bold font-sans">°C</span>
+                  </p>
+                  <p
+                    class="text-[9px] text-neo-ink font-bold uppercase tracking-widest mt-1 truncate"
+                    title="Vento: {{ climaAtual.windspeed }} KM/H"
+                  >
+                    Vento: {{ climaAtual.windspeed }} KM/H
+                  </p>
                 </div>
               </div>
 
-              <div class="text-center border-l-[3px] border-neo-ink pl-4">
-                <span class="text-3xl drop-shadow-[2px_2px_0px_#1D2B1F]">{{ faseLuaAtual.icone }}</span>
-                <p class="text-[9px] font-black uppercase tracking-widest text-neo-ink mt-2">{{ faseLuaAtual.nome }}</p>
+              <div class="text-center border-l-[3px] border-neo-ink pl-3 shrink-0">
+                <span class="text-3xl drop-shadow-[2px_2px_0px_#1D2B1F]">{{
+                  faseLuaAtual.icone
+                }}</span>
+                <p class="text-[8px] font-black uppercase tracking-widest text-neo-ink mt-2">
+                  {{ faseLuaAtual.nome }}
+                </p>
               </div>
             </div>
 
-            <div *ngIf="expandido && previsaoFutura.length > 0" class="mt-5 pt-5 border-t-[3px] border-neo-ink flex flex-col gap-3 animate-fade-in">
-              <p class="text-[10px] text-neo-muted uppercase tracking-widest font-black mb-1">Visão Meteorológica</p>
+            <div
+              *ngIf="expandido && previsaoFutura.length > 0"
+              class="mt-5 pt-5 border-t-[3px] border-neo-ink flex flex-col gap-3 animate-fade-in"
+            >
+              <p class="text-[10px] text-neo-muted uppercase tracking-widest font-black mb-1">
+                Visão Meteorológica
+              </p>
 
-              <div *ngFor="let prev of previsaoFutura" class="flex justify-between items-center font-bold bg-neo-paper border-2 border-neo-ink px-3 py-2">
+              <div
+                *ngFor="let prev of previsaoFutura"
+                class="flex justify-between items-center font-bold bg-neo-paper border-2 border-neo-ink px-3 py-2"
+              >
                 <span class="w-10 uppercase text-xs">{{ prev.diaSemana }}</span>
                 <span class="text-xl drop-shadow-[1px_1px_0px_#1D2B1F]">{{ prev.icone }}</span>
                 <div class="flex gap-2 text-xs font-mono">
@@ -80,19 +143,34 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
               </div>
             </div>
 
-            <button (click)="toggleExpandir()" class="w-full mt-5 neo-btn neo-btn-outline !py-2 text-[10px]">
+            <button
+              (click)="toggleExpandir()"
+              class="w-full mt-5 neo-btn neo-btn-outline !py-2 text-[10px]"
+            >
               {{ expandido ? 'Minimizar' : 'Ver Previsão' }}
             </button>
           </div>
-
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-  `]
+  styles: [
+    `
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.2s ease-out forwards;
+      }
+    `,
+  ],
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapElement') mapElement!: ElementRef;
@@ -105,7 +183,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   expandido: boolean = false;
   carregandoClima: boolean = true;
   localAtualNome: string = 'Detectando localização...';
-  faseLuaAtual: { icone: string, nome: string } = { icone: '🌑', nome: 'Nova' };
+  faseLuaAtual: { icone: string; nome: string } = { icone: '🌑', nome: 'Nova' };
   posX: number = 24;
   posY: number = 5000;
   arrastando: boolean = false;
@@ -118,7 +196,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private fishingSpotService: FishingSpotService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngAfterViewInit(): void {
@@ -163,6 +241,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.posY = Math.max(16, Math.min(newY, this.limiteMaxY));
   }
 
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.ajustarLimites();
+  }
   @HostListener('document:mouseup')
   @HostListener('document:touchend')
   pararArrasto(): void {
@@ -183,25 +265,42 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   toggleExpandir(): void {
+    const alturaAntiga = this.climaWidget.nativeElement.offsetHeight;
+
     this.expandido = !this.expandido;
-    setTimeout(() => this.ajustarLimites(), 310);
+
+    this.cdr.detectChanges();
+
+    const alturaNova = this.climaWidget.nativeElement.offsetHeight;
+
+    const diferenca = alturaAntiga - alturaNova;
+
+    this.posY += diferenca;
+
+    this.ajustarLimites();
   }
 
   private initMap(): void {
-    const rsBounds = L.latLngBounds([ [-34.0, -58.0], [-27.0, -49.0] ]);
+    const rsBounds = L.latLngBounds([
+      [-34.0, -58.0],
+      [-27.0, -49.0],
+    ]);
 
     this.map = L.map(this.mapElement.nativeElement, {
       center: [-29.7171, -52.4253],
       zoom: 7,
       minZoom: 6,
       maxBounds: rsBounds,
-      maxBoundsViscosity: 1.0
+      maxBoundsViscosity: 1.0,
     });
 
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19,
-      attribution: 'Tiles © Esri'
-    }).addTo(this.map);
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+      {
+        maxZoom: 19,
+        attribution: 'Tiles © Esri',
+      },
+    ).addTo(this.map);
 
     this.map.on('click', (e: L.LeafletMouseEvent) => {
       this.atualizarClimaPorCoordenada(e.latlng.lat, e.latlng.lng, 'Ponto Selecionado Manualmente');
@@ -216,7 +315,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       className: 'bg-transparent',
       html: `<div class="w-5 h-5 bg-neo-rust border-[3px] border-neo-ink rounded-full shadow-[4px_4px_0px_0px_#1D2B1F] animate-pulse"></div>`,
       iconSize: [20, 20],
-      iconAnchor: [10, 10]
+      iconAnchor: [10, 10],
     });
 
     this.pinoSelecionado = L.marker([lat, lng], { icon: targetIcon }).addTo(this.map!);
@@ -237,14 +336,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         },
         (error) => {
           this.atualizarClimaPorCoordenada(-29.7171, -52.4253, 'Região Central - RS (Padrão)');
-        }
+        },
       );
     } else {
       this.atualizarClimaPorCoordenada(-29.7171, -52.4253, 'Região Central - RS (Padrão)');
     }
   }
 
-  private async atualizarClimaPorCoordenada(lat: number, lng: number, nomeLocal: string): Promise<void> {
+  private async atualizarClimaPorCoordenada(
+    lat: number,
+    lng: number,
+    nomeLocal: string,
+  ): Promise<void> {
     this.carregandoClima = true;
     this.localAtualNome = nomeLocal;
     this.cdr.detectChanges();
@@ -262,10 +365,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           for (let i = 1; i <= 3; i++) {
             const dataPrev = new Date(data.daily.time[i] + 'T12:00:00');
             this.previsaoFutura.push({
-              diaSemana: dataPrev.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', ''),
+              diaSemana: dataPrev
+                .toLocaleDateString('pt-BR', { weekday: 'short' })
+                .replace('.', ''),
               max: Math.round(data.daily.temperature_2m_max[i]),
               min: Math.round(data.daily.temperature_2m_min[i]),
-              icone: this.obterIconeClima(data.daily.weathercode[i])
+              icone: this.obterIconeClima(data.daily.weathercode[i]),
             });
           }
         }
@@ -286,10 +391,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private async buscarNomeDaCidade(lat: number, lng: number): Promise<void> {
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`,
+      );
       const data = await response.json();
       if (data && data.address) {
-        this.localAtualNome = data.address.city || data.address.town || data.address.municipality || 'Região Remota';
+        this.localAtualNome =
+          data.address.city || data.address.town || data.address.municipality || 'Região Remota';
         this.cdr.detectChanges();
       }
     } catch (e) {}
@@ -312,7 +420,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     let mes = data.getMonth() + 1;
     let dia = data.getDate();
 
-    if (mes < 3) { ano - 1; mes += 12; }
+    if (mes < 3) {
+      ano - 1;
+      mes += 12;
+    }
     ++mes;
     let c = 365.25 * ano;
     let e = 30.6 * mes;
@@ -331,7 +442,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       { icone: '🌖', nome: 'Minguante Gibosa' },
       { icone: '🌗', nome: 'Quarto Minguante' },
       { icone: '🌘', nome: 'Minguante' },
-      { icone: '🌑', nome: 'Nova' }
+      { icone: '🌑', nome: 'Nova' },
     ];
 
     this.faseLuaAtual = fases[fase];
@@ -339,21 +450,35 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private async applyStateMask(): Promise<void> {
     try {
-      const response = await fetch('https://servicodados.ibge.gov.br/api/v3/malhas/estados/RS?formato=application/vnd.geo+json');
+      const response = await fetch(
+        'https://servicodados.ibge.gov.br/api/v3/malhas/estados/RS?formato=application/vnd.geo+json',
+      );
       const geoJson = await response.json();
 
-      const worldCoords = [ [90, -180], [90, 180], [-90, 180], [-90, -180] ];
+      const worldCoords = [
+        [90, -180],
+        [90, 180],
+        [-90, 180],
+        [-90, -180],
+      ];
       const rsGeometry = geoJson.features[0].geometry;
       let rsHoles: any[] = [];
 
       if (rsGeometry.type === 'Polygon') {
-        rsHoles = rsGeometry.coordinates.map((ring: any[]) => ring.map(coord => [coord[1], coord[0]]));
+        rsHoles = rsGeometry.coordinates.map((ring: any[]) =>
+          ring.map((coord) => [coord[1], coord[0]]),
+        );
       } else if (rsGeometry.type === 'MultiPolygon') {
-        rsHoles = rsGeometry.coordinates.flat(1).map((ring: any[]) => ring.map(coord => [coord[1], coord[0]]));
+        rsHoles = rsGeometry.coordinates
+          .flat(1)
+          .map((ring: any[]) => ring.map((coord) => [coord[1], coord[0]]));
       }
 
       L.polygon([worldCoords, ...rsHoles] as any, {
-        color: 'transparent', fillColor: '#1e293b', fillOpacity: 0.8, interactive: false
+        color: 'transparent',
+        fillColor: '#1e293b',
+        fillOpacity: 0.8,
+        interactive: false,
       }).addTo(this.map!);
     } catch (error) {}
   }
@@ -365,19 +490,30 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private carregarPontosReaisDoBanco(): void {
     this.fishingSpotService.listarLocais(0, 500).subscribe({
       next: (pagina) => {
-        pagina.content.forEach(local => {
+        pagina.content.forEach((local) => {
           if (local.latitude && local.longitude) {
             this.createCustomMarker(
-              local.latitude, local.longitude, local.name,
-              local.riverName || 'Água Desconhecida', this.sortearPeixe(), local.id
+              local.latitude,
+              local.longitude,
+              local.name,
+              local.riverName || 'Água Desconhecida',
+              this.sortearPeixe(),
+              local.id,
             );
           }
         });
-      }
+      },
     });
   }
 
-  private createCustomMarker(lat: number, lng: number, title: string, riverName: string, pngName: string, id: number): void {
+  private createCustomMarker(
+    lat: number,
+    lng: number,
+    title: string,
+    riverName: string,
+    pngName: string,
+    id: number,
+  ): void {
     if (!this.map) return;
 
     const customIcon = L.divIcon({
@@ -401,7 +537,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         </div>
       `,
       iconSize: [40, 40],
-      iconAnchor: [20, 20]
+      iconAnchor: [20, 20],
     });
 
     const marker = L.marker([lat, lng], { icon: customIcon }).addTo(this.map);
