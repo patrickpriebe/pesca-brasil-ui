@@ -20,21 +20,41 @@ import { Equipment } from '../core/models/api-models';
           <h3 class="text-2xl font-serif font-black text-neo-ink mb-6">Novo Arsenal</h3>
           <form [formGroup]="equipForm" (ngSubmit)="salvar()" class="flex flex-col gap-5">
             <div>
-              <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2">Tipo *</label>
-              <select formControlName="type" class="neo-input cursor-pointer">
+              <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
+                >Tipo *</label
+              >
+              <select formControlName="type" class="neo-input neo-select cursor-pointer">
                 <option value="CARRETILHA">Carretilha</option>
                 <option value="MOLINETE">Molinete</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2">Ação *</label>
-              <input type="text" formControlName="action" placeholder="Ex: Rápida, Média" class="neo-input">
+              <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
+                >Ação *</label
+              >
+              <input
+                type="text"
+                formControlName="action"
+                placeholder="Ex: Rápida, Média"
+                class="neo-input"
+              />
             </div>
             <div>
-              <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2">Libragem (Linha) *</label>
-              <input type="text" formControlName="recommendedLineWeight" placeholder="Ex: 10-20 lbs" class="neo-input font-mono">
+              <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
+                >Libragem (Linha) *</label
+              >
+              <input
+                type="text"
+                formControlName="recommendedLineWeight"
+                placeholder="Ex: 10-20 lbs"
+                class="neo-input font-mono"
+              />
             </div>
-            <button type="submit" [disabled]="equipForm.invalid || salvando" class="neo-btn mt-4 w-full">
+            <button
+              type="submit"
+              [disabled]="equipForm.invalid || salvando"
+              class="neo-btn mt-4 w-full"
+            >
               {{ salvando ? 'Salvando...' : 'Gravar Equipamento' }}
             </button>
           </form>
@@ -44,51 +64,98 @@ import { Equipment } from '../core/models/api-models';
           <div class="neo-table-container">
             <table class="w-full text-left border-collapse neo-table">
               <thead>
-              <tr>
-                <th>Tipo</th>
-                <th>Ação</th>
-                <th>Libragem (Linha)</th>
-                <th class="text-right">Ações</th>
-              </tr>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Ação</th>
+                  <th>Libragem (Linha)</th>
+                  <th class="text-right">Ações</th>
+                </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let eq of equipamentos">
-                <td>
-                  <span class="border-2 border-neo-ink bg-white font-black px-2 py-1 text-xs shadow-[2px_2px_0px_0px_#1D2B1F]">
+                <tr *ngFor="let eq of equipamentos">
+                  <td>
+                    <span
+                      class="border-2 border-neo-ink bg-white font-black px-2 py-1 text-xs shadow-[2px_2px_0px_0px_#1D2B1F]"
+                    >
                       {{ eq.type }}
                     </span>
-                </td>
-                <td class="font-bold">{{ eq.action }}</td>
-                <td class="font-black text-neo-muted font-mono">{{ eq.recommendedLineWeight }}</td>
-                <td class="text-right">
-                  <button (click)="abrirModalExclusao(eq.id)" class="neo-btn neo-btn-danger !px-4 !py-2 !text-xs">Excluir</button>
-                </td>
-              </tr>
+                  </td>
+                  <td class="font-bold">{{ eq.action }}</td>
+                  <td class="font-black text-neo-muted font-mono">
+                    {{ eq.recommendedLineWeight }}
+                  </td>
+                  <td class="text-right">
+                    <button
+                      (click)="abrirModalExclusao(eq.id)"
+                      class="neo-btn neo-btn-danger !px-4 !py-2 !text-xs"
+                    >
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
               </tbody>
             </table>
-            <div *ngIf="carregando" class="text-center py-8 font-bold text-neo-ink uppercase tracking-widest">Carregando equipamentos...</div>
+            <div
+              *ngIf="carregando"
+              class="text-center py-8 font-bold text-neo-ink uppercase tracking-widest"
+            >
+              Carregando equipamentos...
+            </div>
           </div>
         </div>
       </div>
 
-      <div *ngIf="idParaExcluir !== null" class="fixed inset-0 bg-neo-ink/80 flex items-center justify-center z-50 p-4">
-        <div class="neo-card max-w-sm w-full p-8 flex flex-col items-center text-center animate-scale-up bg-white">
+      <div
+        *ngIf="idParaExcluir !== null"
+        class="fixed inset-0 bg-neo-ink/80 flex items-center justify-center z-50 p-4"
+      >
+        <div
+          class="neo-card max-w-sm w-full p-8 flex flex-col items-center text-center animate-scale-up bg-white"
+        >
           <h3 class="text-3xl font-serif font-black text-neo-ink mb-4">Atenção!</h3>
-          <p class="text-neo-ink font-bold text-sm mb-8 leading-relaxed">Você está jogando este equipamento fora. Confirma exclusão?</p>
+          <p class="text-neo-ink font-bold text-sm mb-8 leading-relaxed">
+            Você está jogando este equipamento fora. Confirma exclusão?
+          </p>
           <div class="flex gap-4 w-full">
-            <button (click)="fecharModalExclusao()" class="neo-btn neo-btn-outline flex-1">Cancelar</button>
-            <button (click)="confirmarExclusao()" class="neo-btn neo-btn-danger flex-1">Excluir</button>
+            <button (click)="fecharModalExclusao()" class="neo-btn neo-btn-outline flex-1">
+              Cancelar
+            </button>
+            <button (click)="confirmarExclusao()" class="neo-btn neo-btn-danger flex-1">
+              Excluir
+            </button>
           </div>
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes scaleUp { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-    .animate-scale-up { animation: scaleUp 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-  `]
+  styles: [
+    `
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes scaleUp {
+        from {
+          transform: scale(0.96);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.2s ease-out forwards;
+      }
+      .animate-scale-up {
+        animation: scaleUp 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+    `,
+  ],
 })
 export class EquipmentManagementComponent implements OnInit {
   equipForm: FormGroup;
@@ -97,11 +164,15 @@ export class EquipmentManagementComponent implements OnInit {
   salvando = false;
   idParaExcluir: number | null = null;
 
-  constructor(private fb: FormBuilder, private equipService: EquipmentService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private fb: FormBuilder,
+    private equipService: EquipmentService,
+    private cdr: ChangeDetectorRef,
+  ) {
     this.equipForm = this.fb.group({
       type: ['CARRETILHA', Validators.required],
       action: ['', Validators.required],
-      recommendedLineWeight: ['', Validators.required]
+      recommendedLineWeight: ['', Validators.required],
     });
   }
 
@@ -111,8 +182,15 @@ export class EquipmentManagementComponent implements OnInit {
 
   carregarEquipamentos(): void {
     this.equipService.listarEquipamentos(0, 50).subscribe({
-      next: (p) => { this.equipamentos = p.content; this.carregando = false; this.cdr.detectChanges(); },
-      error: () => { this.carregando = false; this.cdr.detectChanges(); }
+      next: (p) => {
+        this.equipamentos = p.content;
+        this.carregando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.carregando = false;
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -120,8 +198,16 @@ export class EquipmentManagementComponent implements OnInit {
     if (this.equipForm.invalid) return;
     this.salvando = true;
     this.equipService.salvarEquipamento(this.equipForm.value).subscribe({
-      next: (e) => { this.equipamentos.unshift(e); this.equipForm.reset({type: 'CARRETILHA'}); this.salvando = false; this.cdr.detectChanges(); },
-      error: () => { this.salvando = false; this.cdr.detectChanges(); }
+      next: (e) => {
+        this.equipamentos.unshift(e);
+        this.equipForm.reset({ type: 'CARRETILHA' });
+        this.salvando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.salvando = false;
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -138,11 +224,11 @@ export class EquipmentManagementComponent implements OnInit {
 
     this.equipService.excluirEquipamento(this.idParaExcluir).subscribe({
       next: () => {
-        this.equipamentos = this.equipamentos.filter(e => e.id !== this.idParaExcluir);
+        this.equipamentos = this.equipamentos.filter((e) => e.id !== this.idParaExcluir);
         this.fecharModalExclusao();
         this.cdr.detectChanges();
       },
-      error: () => this.fecharModalExclusao()
+      error: () => this.fecharModalExclusao(),
     });
   }
 }
