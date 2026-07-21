@@ -1,4 +1,12 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  ViewChild,
+  OnDestroy,
+  ChangeDetectorRef,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
 import { FishingSpotService } from '../../core/services/fishing-spot.service';
@@ -21,7 +29,7 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
       </div>
 
       <div
-        class="flex-1 w-full border-[4px] border-neo-ink bg-neo-paper shadow-[8px_8px_0px_0px_#1D2B1F] relative mb-3 mr-3 min-h-[400px]"
+        class="flex-1 w-full border-[4px] border-neo-ink bg-neo-paper shadow-[8px_8px_0px_0px_#1D2B1F] relative mb-3 mr-3 min-h-[400px] overflow-hidden"
       >
         <div #mapElement class="h-full w-full z-0 cursor-crosshair"></div>
 
@@ -95,9 +103,9 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
           <div *ngIf="!carregandoClima && climaAtual">
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
-                <span class="text-4xl drop-shadow-[2px_2px_0px_#1D2B1F] shrink-0">{{
-                  obterIconeClima(climaAtual.weathercode)
-                }}</span>
+                <span class="text-4xl drop-shadow-[2px_2px_0px_#1D2B1F] shrink-0">
+                  {{ obterIconeClima(climaAtual.weathercode) }}
+                </span>
                 <div class="min-w-0">
                   <p class="text-2xl font-black font-mono tracking-tighter truncate">
                     {{ climaAtual.temperature
@@ -113,9 +121,9 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
               </div>
 
               <div class="text-center border-l-[3px] border-neo-ink pl-3 shrink-0">
-                <span class="text-3xl drop-shadow-[2px_2px_0px_#1D2B1F]">{{
-                  faseLuaAtual.icone
-                }}</span>
+                <span class="text-3xl drop-shadow-[2px_2px_0px_#1D2B1F]">
+                  {{ faseLuaAtual.icone }}
+                </span>
                 <p class="text-[8px] font-black uppercase tracking-widest text-neo-ink mt-2">
                   {{ faseLuaAtual.nome }}
                 </p>
@@ -184,8 +192,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   carregandoClima: boolean = true;
   localAtualNome: string = 'Detectando localização...';
   faseLuaAtual: { icone: string; nome: string } = { icone: '🌑', nome: 'Nova' };
-  posX: number = 24;
-  posY: number = 5000;
+  posX: number = 5000;
+  posY: number = 24;
   arrastando: boolean = false;
   offsetX: number = 0;
   offsetY: number = 0;
@@ -241,18 +249,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.posY = Math.max(16, Math.min(newY, this.limiteMaxY));
   }
 
-  @HostListener('window:resize')
-  onWindowResize(): void {
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(event?: Event): void {
     if (this.map) {
       this.map.invalidateSize();
     }
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       this.ajustarLimites();
-
       this.cdr.detectChanges();
-    }, 100);
+    });
   }
+
   @HostListener('document:mouseup')
   @HostListener('document:touchend')
   pararArrasto(): void {
@@ -265,16 +273,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const container = this.mapElement.nativeElement.parentElement;
     const widget = this.climaWidget.nativeElement;
 
-    const maxX = container.clientWidth - widget.offsetWidth - 16;
-    const maxY = container.clientHeight - widget.offsetHeight - 16;
+    this.limiteMaxX = container.clientWidth - widget.offsetWidth - 16;
+    this.limiteMaxY = container.clientHeight - widget.offsetHeight - 16;
 
-    if (this.posX > maxX) {
-      this.posX = Math.max(16, maxX);
+    if (this.posX > this.limiteMaxX) {
+      this.posX = Math.max(16, this.limiteMaxX);
+    }
+    if (this.posY > this.limiteMaxY) {
+      this.posY = Math.max(16, this.limiteMaxY);
     }
 
-    if (this.posY > maxY) {
-      this.posY = Math.max(16, maxY);
-    }
+    if (this.posX < 16) this.posX = 16;
+    if (this.posY < 16) this.posY = 16;
   }
 
   toggleExpandir(): void {
