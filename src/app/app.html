@@ -11,11 +11,15 @@
         </svg>
       </button>
 
-      <div [ngClass]="menuMinimizado ? 'justify-center px-2' : 'px-6'" class="h-24 flex items-center border-b-[3px] border-neo-ink overflow-hidden transition-all duration-300">
-        <div class="flex items-center min-w-0">
-          <h1 *ngIf="!menuMinimizado" class="font-serif font-black text-3xl tracking-tighter text-neo-ink ml-2 animate-fade-in text-ellipsis overflow-hidden whitespace-nowrap">
+      <div [ngClass]="menuMinimizado ? 'justify-center px-2' : 'px-6'" class="h-24 flex items-center border-b-[3px] border-neo-ink transition-all duration-300">
+        <div class="flex items-center justify-center gap-2">
+
+          <h1 *ngIf="!menuMinimizado" class="font-serif font-black text-3xl tracking-tighter text-neo-ink animate-fade-in pr-2">
             Pesca<span class="text-neo-lime" style="text-shadow: 1px 1px 0px #1D2B1F, -1px -1px 0px #1D2B1F, 1px -1px 0px #1D2B1F, -1px 1px 0px #1D2B1F;">Brasil</span>
           </h1>
+
+          <img src="favicon.ico" alt="Logo" class="w-9 h-9 object-contain shrink-0" />
+
         </div>
       </div>
 
