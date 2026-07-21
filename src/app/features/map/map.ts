@@ -43,7 +43,7 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
         <button
           *ngIf="!widgetAberto"
           (click)="abrirWidget()"
-          class="absolute top-16 right-4 z-[1000] bg-white border-[3px] border-neo-ink px-3 py-2 shadow-[4px_4px_0px_0px_#1D2B1F] flex items-center gap-2 hover:bg-neo-paper transition-colors hover:-translate-y-1 hover:-translate-x-1 cursor-pointer animate-fade-in"
+          class="absolute bottom-6 left-6 z-[1000] bg-white border-[3px] border-neo-ink px-3 py-2 shadow-[4px_4px_0px_0px_#1D2B1F] flex items-center gap-2 hover:bg-neo-paper transition-colors hover:-translate-y-1 hover:-translate-x-1 cursor-pointer animate-fade-in"
           title="Abrir Clima"
         >
           <span class="text-xl">{{
@@ -130,18 +130,19 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
 
           <div *ngIf="!carregandoClima && climaAtual">
             <div class="flex justify-between items-center w-full">
-              <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
+              <div class="flex items-center gap-3">
                 <span class="text-4xl drop-shadow-[2px_2px_0px_#1D2B1F] shrink-0">
                   {{ obterIconeClima(climaAtual.weathercode) }}
                 </span>
-                <div class="min-w-0">
-                  <p class="text-2xl font-black font-mono tracking-tighter truncate">
+
+                <div>
+                  <p class="text-2xl font-black font-mono tracking-tighter whitespace-nowrap">
                     {{ climaAtual.temperature
                     }}<span class="text-base text-neo-muted font-bold font-sans">°C</span>
                   </p>
+
                   <p
-                    class="text-[9px] text-neo-ink font-bold uppercase tracking-widest mt-1 truncate"
-                    title="Vento: {{ climaAtual.windspeed }} KM/H"
+                    class="text-[9px] text-neo-ink font-bold uppercase tracking-widest mt-1 whitespace-nowrap"
                   >
                     Vento: {{ climaAtual.windspeed }} KM/H
                   </p>
