@@ -243,7 +243,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:resize')
   onWindowResize(): void {
-    this.ajustarLimites();
+    if (this.map) {
+      this.map.invalidateSize();
+    }
+
+    setTimeout(() => {
+      this.ajustarLimites();
+
+      this.cdr.detectChanges();
+    }, 100);
   }
   @HostListener('document:mouseup')
   @HostListener('document:touchend')
@@ -260,8 +268,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const maxX = container.clientWidth - widget.offsetWidth - 16;
     const maxY = container.clientHeight - widget.offsetHeight - 16;
 
-    if (this.posX > maxX) this.posX = Math.max(16, maxX);
-    if (this.posY > maxY) this.posY = Math.max(16, maxY);
+    if (this.posX > maxX) {
+      this.posX = Math.max(16, maxX);
+    }
+
+    if (this.posY > maxY) {
+      this.posY = Math.max(16, maxY);
+    }
   }
 
   toggleExpandir(): void {
