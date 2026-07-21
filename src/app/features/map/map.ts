@@ -40,15 +40,43 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
           Conectado
         </div>
 
+        <button
+          *ngIf="!widgetAberto"
+          (click)="abrirWidget()"
+          class="absolute top-16 right-4 z-[1000] bg-white border-[3px] border-neo-ink px-3 py-2 shadow-[4px_4px_0px_0px_#1D2B1F] flex items-center gap-2 hover:bg-neo-paper transition-colors hover:-translate-y-1 hover:-translate-x-1 cursor-pointer animate-fade-in"
+          title="Abrir Clima"
+        >
+          <span class="text-xl">{{
+            climaAtual ? obterIconeClima(climaAtual.weathercode) : '⛅'
+          }}</span>
+          <span class="text-neo-ink font-black text-xs uppercase tracking-widest">Clima</span>
+        </button>
+
         <div
           #climaWidget
           class="absolute z-[1000] bg-white border-[4px] border-neo-ink pb-6 px-4 md:px-6 shadow-[6px_6px_0px_0px_#1D2B1F] w-72 max-w-[calc(100vw-2rem)] text-neo-ink font-sans"
           [style.left.px]="posX"
           [style.top.px]="posY"
+          [class.hidden]="!widgetAberto"
           [class.transition-all]="!arrastando"
           [class.duration-300]="!arrastando"
           [ngClass]="carregandoClima ? 'opacity-90 scale-95' : 'opacity-100 scale-100'"
         >
+          <button
+            (click)="fecharWidget()"
+            class="absolute top-3 right-3 text-neo-ink hover:text-neo-rust transition-colors"
+            title="Minimizar Clima"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="3"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </button>
+
           <div
             class="w-full pt-4 pb-3 cursor-grab active:cursor-grabbing flex justify-center items-center hover:bg-neo-paper transition-colors group"
             (mousedown)="iniciarArrasto($event)"
@@ -61,7 +89,7 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
           </div>
 
           <div class="flex justify-between items-start mb-4 border-b-[3px] border-neo-ink pb-4">
-            <div class="w-[80%]">
+            <div class="w-[80%] mt-1">
               <p class="text-[10px] text-neo-muted uppercase tracking-widest font-black mb-1">
                 Coordenada Atual
               </p>
@@ -155,7 +183,7 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
               (click)="toggleExpandir()"
               class="w-full mt-5 neo-btn neo-btn-outline !py-2 text-[10px]"
             >
-              {{ expandido ? 'Minimizar' : 'Ver Previsão' }}
+              {{ expandido ? 'Ver Menos' : 'Ver Previsão' }}
             </button>
           </div>
         </div>
@@ -183,15 +211,20 @@ import { FishingSpotService } from '../../core/services/fishing-spot.service';
 export class MapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapElement') mapElement!: ElementRef;
   @ViewChild('climaWidget') climaWidget!: ElementRef;
+
   private map: L.Map | undefined;
   private pinoSelecionado: L.Marker | undefined;
+  private peixesLocais: string[] = ['dourado.png', 'jundia.png', 'traira.png'];
 
   climaAtual: any = null;
   previsaoFutura: any[] = [];
-  expandido: boolean = false;
   carregandoClima: boolean = true;
   localAtualNome: string = 'Detectando localização...';
   faseLuaAtual: { icone: string; nome: string } = { icone: '🌑', nome: 'Nova' };
+
+  expandido: boolean = false;
+  widgetAberto: boolean = true;
+
   posX: number = 5000;
   posY: number = 24;
   arrastando: boolean = false;
@@ -199,8 +232,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   offsetY: number = 0;
   limiteMaxX: number = 0;
   limiteMaxY: number = 0;
-
-  private peixesLocais: string[] = ['dourado.png', 'jundia.png', 'traira.png'];
 
   constructor(
     private fishingSpotService: FishingSpotService,
@@ -218,6 +249,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.obterLocalizacaoNavegador();
 
     setTimeout(() => this.ajustarLimites(), 100);
+  }
+
+  abrirWidget(): void {
+    this.widgetAberto = true;
+    setTimeout(() => this.ajustarLimites(), 50);
+  }
+
+  fecharWidget(): void {
+    this.widgetAberto = false;
   }
 
   iniciarArrasto(e: MouseEvent | TouchEvent): void {
@@ -256,7 +296,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
 
     requestAnimationFrame(() => {
-      this.ajustarLimites();
+      if (this.widgetAberto) {
+        this.ajustarLimites();
+      }
       this.cdr.detectChanges();
     });
   }
@@ -268,7 +310,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   ajustarLimites(): void {
-    if (!this.mapElement || !this.climaWidget) return;
+    if (!this.mapElement || !this.climaWidget || !this.widgetAberto) return;
 
     const container = this.mapElement.nativeElement.parentElement;
     const widget = this.climaWidget.nativeElement;
@@ -291,15 +333,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const alturaAntiga = this.climaWidget.nativeElement.offsetHeight;
 
     this.expandido = !this.expandido;
-
     this.cdr.detectChanges();
 
     const alturaNova = this.climaWidget.nativeElement.offsetHeight;
-
     const diferenca = alturaAntiga - alturaNova;
 
     this.posY += diferenca;
-
     this.ajustarLimites();
   }
 
@@ -408,7 +447,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     } finally {
       this.carregandoClima = false;
       this.cdr.detectChanges();
-      setTimeout(() => this.ajustarLimites(), 50);
+      if (this.widgetAberto) {
+        setTimeout(() => this.ajustarLimites(), 50);
+      }
     }
   }
 
