@@ -1,59 +1,37 @@
-# PescaBrasilUi
+# 🎣 PescaBrasil - Interface (UI)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.3.
+> **Procurando o motor por trás desta interface? [Acesse o repositório da API aqui](https://github.com/patrickpriebe/pesca-brasil-api)**
 
-## Development server
+O PescaBrasil é um sistema full-stack, com arquitetura em camadas e infraestrutura na nuvem. Este repositório contém a **Interface de Usuário**, construída do zero com uma identidade visual focada no Neo-brutalismo para fugir do padrão corporativo.
 
-To start a local development server, run:
+O projeto nasceu para centralizar a gestão de pescarias (diário de capturas, catálogos de espécies, controle de equipamentos e mapeamento de rios). Ele combina mapas interativos e APIs de clima em uma experiência fluida e imersiva.
 
-```bash
-ng serve
-```
+**[Acesse o sistema rodando em Produção aqui](https://pescabrasil.vercel.app/)**
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🎨 Arquitetura Front-end e UI/UX
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+A interface adota o **Neo-brutalismo**: alto contraste, sombras, tipografia marcante e interações responsivas reais.
 
-```bash
-ng generate component component-name
-```
+*   **Angular 18+:** Arquitetura limpa utilizando *Standalone Components* e Reactive Forms.
+*   **Tailwind CSS v4:** Estilização moderna com classes utilitárias e CSS global customizado para quebrar os estilos padrões do navegador (como selects e inputs nativos).
+*   **Leaflet.js:** Integração profunda com mapas para marcação de pontos de pesca via coordenadas exatas (Lat/Lng) e polígonos geográficos.
+*   **Vercel (DevOps):** Hospedagem do Front-end com pipeline de CI/CD configurado para deploys automáticos.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 🎣 Principais Funcionalidades da Interface
 
-## Building
+1.  **Smart Map:** Interação com o mapa para registrar pontos de pesca, incluindo detecção de localização via GPS do navegador.
+2.  **Widget Climático:** Previsão do tempo em tempo real via satélite (`Open-Meteo API`) com ícones customizados, atrelada à coordenada exata do mapa.
+3.  **Diário de Troféus:** Formulários reativos para cadastro de capturas com registro de peso, tamanho, isca, equipamento utilizado, condições do local e upload de foto da captura.
+4.  **Catálogos Relacionais:** Gestão completa de Peixes, Iscas e Equipamentos com associações dinâmicas.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+Desenvolvido por: **Patrick**
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Desenvolvedor de Software, apaixonado por código limpo, arquitetura backend e interfaces que fogem do comum.
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+🔗 [LinkedIn](https://www.linkedin.com/in/patrickpriebe/) | 💻 [GitHub](https://github.com/patrickpriebe)
