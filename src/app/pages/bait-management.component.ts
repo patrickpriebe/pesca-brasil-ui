@@ -34,15 +34,66 @@ import { Bait } from '../core/models/api-models';
                 class="neo-input"
               />
             </div>
-            <div>
+
+            <div class="relative">
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Tipo *</label
               >
-              <select formControlName="type" class="neo-input neo-select cursor-pointer">
-                <option value="ARTIFICIAL">Artificial</option>
-                <option value="NATURAL">Natural</option>
-              </select>
+
+              <button
+                type="button"
+                (click)="dropdownTipoAberto = !dropdownTipoAberto"
+                class="neo-input w-full text-left flex justify-between items-center cursor-pointer bg-white relative z-[51]"
+              >
+                <span class="block truncate">{{
+                  baitForm.get('type')?.value === 'ARTIFICIAL' ? 'Artificial' : 'Natural'
+                }}</span>
+                <svg
+                  class="w-5 h-5 text-neo-ink pointer-events-none transition-transform"
+                  [class.rotate-180]="dropdownTipoAberto"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </button>
+
+              <div
+                *ngIf="dropdownTipoAberto"
+                class="fixed inset-0 z-[50]"
+                (click)="dropdownTipoAberto = false"
+              ></div>
+
+              <div
+                *ngIf="dropdownTipoAberto"
+                class="absolute left-0 right-0 top-[calc(100%+8px)] z-[55] bg-white border-[3px] border-neo-ink rounded-xl shadow-[4px_4px_0px_0px_#1D2B1F] flex flex-col overflow-hidden animate-scale-up"
+              >
+                <button
+                  type="button"
+                  (click)="selecionarTipo('ARTIFICIAL')"
+                  class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime transition-colors border-b-[2px] border-neo-ink/20"
+                  [ngClass]="{ 'bg-neo-lime': baitForm.get('type')?.value === 'ARTIFICIAL' }"
+                >
+                  Artificial
+                </button>
+
+                <button
+                  type="button"
+                  (click)="selecionarTipo('NATURAL')"
+                  class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime transition-colors"
+                  [ngClass]="{ 'bg-neo-lime': baitForm.get('type')?.value === 'NATURAL' }"
+                >
+                  Natural
+                </button>
+              </div>
             </div>
+
             <div>
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Descrição</label
@@ -108,7 +159,7 @@ import { Bait } from '../core/models/api-models';
 
       <div
         *ngIf="idParaExcluir !== null"
-        class="fixed inset-0 bg-neo-ink/80 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-neo-ink/80 flex items-center justify-center z-[100] p-4"
       >
         <div
           class="neo-card max-w-sm w-full p-8 flex flex-col items-center text-center animate-scale-up bg-white"
@@ -150,7 +201,7 @@ import { Bait } from '../core/models/api-models';
         }
       }
       .animate-fade-in {
-        animation: fadeIn 0.2s ease-out forwards;
+        animation: fadeIn 0.15s ease-out forwards;
       }
       .animate-scale-up {
         animation: scaleUp 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -164,6 +215,7 @@ export class BaitManagementComponent implements OnInit {
   carregando = true;
   salvando = false;
   idParaExcluir: number | null = null;
+  dropdownTipoAberto = false;
 
   constructor(
     private fb: FormBuilder,
@@ -179,6 +231,11 @@ export class BaitManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarIscas();
+  }
+
+  selecionarTipo(tipo: string): void {
+    this.baitForm.patchValue({ type: tipo });
+    this.dropdownTipoAberto = false;
   }
 
   carregarIscas(): void {
@@ -215,6 +272,7 @@ export class BaitManagementComponent implements OnInit {
   abrirModalExclusao(id: number): void {
     this.idParaExcluir = id;
   }
+
   fecharModalExclusao(): void {
     this.idParaExcluir = null;
   }

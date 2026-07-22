@@ -44,10 +44,44 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
                 >Espécie do Peixe *</label
               >
               <div class="flex gap-2">
-                <select formControlName="fishId" class="neo-input neo-select cursor-pointer">
-                  <option value="" disabled selected>Selecione a espécie...</option>
-                  <option *ngFor="let f of peixes" [value]="f.id">{{ f.commonName }}</option>
-                </select>
+                <div class="relative flex-1">
+                  <button
+                    type="button"
+                    (click)="ddFish = !ddFish"
+                    class="neo-input w-full text-left flex justify-between items-center cursor-pointer bg-white relative z-[451]"
+                  >
+                    <span class="block truncate">{{ getFishName() }}</span>
+                    <svg
+                      class="w-5 h-5 text-neo-ink pointer-events-none transition-transform"
+                      [class.rotate-180]="ddFish"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="3"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </button>
+                  <div *ngIf="ddFish" class="fixed inset-0 z-[450]" (click)="ddFish = false"></div>
+                  <div
+                    *ngIf="ddFish"
+                    class="absolute left-0 right-0 top-[calc(100%+8px)] z-[455] bg-white border-[3px] border-neo-ink rounded-xl shadow-[4px_4px_0px_0px_#1D2B1F] flex flex-col max-h-48 overflow-y-auto custom-scrollbar animate-scale-up"
+                  >
+                    <button
+                      type="button"
+                      *ngFor="let f of peixes"
+                      (click)="selFish(f.id)"
+                      class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime transition-colors border-b-[2px] border-neo-ink/20 last:border-b-0"
+                      [ngClass]="{ 'bg-neo-lime': catchForm.get('fishId')?.value === f.id }"
+                    >
+                      {{ f.commonName }}
+                    </button>
+                  </div>
+                </div>
                 <button
                   type="button"
                   (click)="abrirModal('FISH')"
@@ -63,10 +97,48 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
                 >Em qual Rio/Lago? *</label
               >
               <div class="flex gap-2">
-                <select formControlName="riverId" class="neo-input neo-select cursor-pointer">
-                  <option value="" disabled selected>Selecione o rio...</option>
-                  <option *ngFor="let r of rios" [value]="r.id">{{ r.name }}</option>
-                </select>
+                <div class="relative flex-1">
+                  <button
+                    type="button"
+                    (click)="ddRiver = !ddRiver"
+                    class="neo-input w-full text-left flex justify-between items-center cursor-pointer bg-white relative z-[451]"
+                  >
+                    <span class="block truncate">{{ getRiverName() }}</span>
+                    <svg
+                      class="w-5 h-5 text-neo-ink pointer-events-none transition-transform"
+                      [class.rotate-180]="ddRiver"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="3"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </button>
+                  <div
+                    *ngIf="ddRiver"
+                    class="fixed inset-0 z-[450]"
+                    (click)="ddRiver = false"
+                  ></div>
+                  <div
+                    *ngIf="ddRiver"
+                    class="absolute left-0 right-0 top-[calc(100%+8px)] z-[455] bg-white border-[3px] border-neo-ink rounded-xl shadow-[4px_4px_0px_0px_#1D2B1F] flex flex-col max-h-48 overflow-y-auto custom-scrollbar animate-scale-up"
+                  >
+                    <button
+                      type="button"
+                      *ngFor="let r of rios"
+                      (click)="selRiver(r.id)"
+                      class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime transition-colors border-b-[2px] border-neo-ink/20 last:border-b-0"
+                      [ngClass]="{ 'bg-neo-lime': catchForm.get('riverId')?.value === r.id }"
+                    >
+                      {{ r.name }}
+                    </button>
+                  </div>
+                </div>
                 <button
                   type="button"
                   (click)="abrirModal('RIVER')"
@@ -87,19 +159,16 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
             <p class="text-sm font-bold text-neo-muted mb-4 uppercase tracking-widest">
               Clique no mapa para marcar
             </p>
-
             <div class="h-64 w-full border-[3px] border-neo-ink relative bg-white">
               <div id="formMap" class="h-full w-full z-0 cursor-crosshair"></div>
             </div>
-
             <div
               *ngIf="catchForm.get('latitude')?.value"
               class="flex gap-4 mt-4 text-xs font-black font-mono bg-white p-3 border-[3px] border-neo-ink shadow-[4px_4px_0px_0px_#1D2B1F] w-fit"
             >
-              <span>LAT: {{ catchForm.get('latitude')?.value | number: '1.6-6' }}</span>
-              <span>LNG: {{ catchForm.get('longitude')?.value | number: '1.6-6' }}</span>
+              <span>LAT: {{ catchForm.get('latitude')?.value | number: '1.6-6' }}</span
+              ><span>LNG: {{ catchForm.get('longitude')?.value | number: '1.6-6' }}</span>
             </div>
-
             <div class="mt-6">
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Apelido do Local (Opcional)</label
@@ -119,10 +188,51 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
                 >Isca</label
               >
               <div class="flex gap-2">
-                <select formControlName="baitId" class="neo-input neo-select cursor-pointer">
-                  <option value="">Sem isca</option>
-                  <option *ngFor="let i of iscas" [value]="i.id">{{ i.name }}</option>
-                </select>
+                <div class="relative flex-1">
+                  <button
+                    type="button"
+                    (click)="ddBait = !ddBait"
+                    class="neo-input w-full text-left flex justify-between items-center cursor-pointer bg-white relative z-[451]"
+                  >
+                    <span class="block truncate">{{ getBaitName() }}</span>
+                    <svg
+                      class="w-5 h-5 text-neo-ink pointer-events-none transition-transform"
+                      [class.rotate-180]="ddBait"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="3"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </button>
+                  <div *ngIf="ddBait" class="fixed inset-0 z-[450]" (click)="ddBait = false"></div>
+                  <div
+                    *ngIf="ddBait"
+                    class="absolute left-0 right-0 top-[calc(100%+8px)] z-[455] bg-white border-[3px] border-neo-ink rounded-xl shadow-[4px_4px_0px_0px_#1D2B1F] flex flex-col max-h-48 overflow-y-auto custom-scrollbar animate-scale-up"
+                  >
+                    <button
+                      type="button"
+                      (click)="selBait('')"
+                      class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime border-b-[2px] border-neo-ink/20"
+                    >
+                      Sem isca
+                    </button>
+                    <button
+                      type="button"
+                      *ngFor="let i of iscas"
+                      (click)="selBait(i.id)"
+                      class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime transition-colors border-b-[2px] border-neo-ink/20 last:border-b-0"
+                      [ngClass]="{ 'bg-neo-lime': catchForm.get('baitId')?.value === i.id }"
+                    >
+                      {{ i.name }}
+                    </button>
+                  </div>
+                </div>
                 <button
                   type="button"
                   (click)="abrirModal('BAIT')"
@@ -138,12 +248,55 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
                 >Equipamento</label
               >
               <div class="flex gap-2">
-                <select formControlName="equipmentId" class="neo-input neo-select cursor-pointer">
-                  <option value="">Não informar</option>
-                  <option *ngFor="let eq of equipamentos" [value]="eq.id">
-                    {{ eq.type }} - Ação {{ eq.action }}
-                  </option>
-                </select>
+                <div class="relative flex-1">
+                  <button
+                    type="button"
+                    (click)="ddEquip = !ddEquip"
+                    class="neo-input w-full text-left flex justify-between items-center cursor-pointer bg-white relative z-[451]"
+                  >
+                    <span class="block truncate">{{ getEquipName() }}</span>
+                    <svg
+                      class="w-5 h-5 text-neo-ink pointer-events-none transition-transform"
+                      [class.rotate-180]="ddEquip"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="3"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  </button>
+                  <div
+                    *ngIf="ddEquip"
+                    class="fixed inset-0 z-[450]"
+                    (click)="ddEquip = false"
+                  ></div>
+                  <div
+                    *ngIf="ddEquip"
+                    class="absolute left-0 right-0 top-[calc(100%+8px)] z-[455] bg-white border-[3px] border-neo-ink rounded-xl shadow-[4px_4px_0px_0px_#1D2B1F] flex flex-col max-h-48 overflow-y-auto custom-scrollbar animate-scale-up"
+                  >
+                    <button
+                      type="button"
+                      (click)="selEquip('')"
+                      class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime border-b-[2px] border-neo-ink/20"
+                    >
+                      Não informar
+                    </button>
+                    <button
+                      type="button"
+                      *ngFor="let eq of equipamentos"
+                      (click)="selEquip(eq.id)"
+                      class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime transition-colors border-b-[2px] border-neo-ink/20 last:border-b-0"
+                      [ngClass]="{ 'bg-neo-lime': catchForm.get('equipmentId')?.value === eq.id }"
+                    >
+                      {{ eq.type }} - Ação {{ eq.action }}
+                    </button>
+                  </div>
+                </div>
                 <button
                   type="button"
                   (click)="abrirModal('EQUIPMENT')"
@@ -157,8 +310,7 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
             <div>
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Data e Hora *</label
-              >
-              <input
+              ><input
                 type="datetime-local"
                 formControlName="catchDate"
                 class="neo-input cursor-pointer uppercase text-xs tracking-wider"
@@ -170,8 +322,7 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
             <div>
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Peso (kg)</label
-              >
-              <input
+              ><input
                 type="number"
                 step="0.01"
                 formControlName="weightInKg"
@@ -179,12 +330,10 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
                 class="neo-input font-mono"
               />
             </div>
-
             <div>
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Comprimento (cm)</label
-              >
-              <input
+              ><input
                 type="number"
                 step="0.1"
                 formControlName="lengthInCm"
@@ -192,26 +341,69 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
                 class="neo-input font-mono"
               />
             </div>
-
             <div>
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Destino do Peixe *</label
               >
-              <select formControlName="outcome" class="neo-input neo-select cursor-pointer">
-                <option value="RELEASED">Pesque & Solte</option>
-                <option value="KEPT">Abatido</option>
-              </select>
+              <div class="relative">
+                <button
+                  type="button"
+                  (click)="ddOutcome = !ddOutcome"
+                  class="neo-input w-full text-left flex justify-between items-center cursor-pointer bg-white relative z-[451]"
+                >
+                  <span class="block truncate">{{ getOutcomeName() }}</span>
+                  <svg
+                    class="w-5 h-5 text-neo-ink pointer-events-none transition-transform"
+                    [class.rotate-180]="ddOutcome"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </button>
+                <div
+                  *ngIf="ddOutcome"
+                  class="fixed inset-0 z-[450]"
+                  (click)="ddOutcome = false"
+                ></div>
+                <div
+                  *ngIf="ddOutcome"
+                  class="absolute left-0 right-0 top-[calc(100%+8px)] z-[455] bg-white border-[3px] border-neo-ink rounded-xl shadow-[4px_4px_0px_0px_#1D2B1F] flex flex-col animate-scale-up"
+                >
+                  <button
+                    type="button"
+                    (click)="selOutcome('RELEASED')"
+                    class="px-4 py-3 text-left font-bold border-b-[2px] border-neo-ink/20 hover:bg-neo-lime"
+                    [ngClass]="{ 'bg-neo-lime': catchForm.get('outcome')?.value === 'RELEASED' }"
+                  >
+                    Pesque & Solte
+                  </button>
+                  <button
+                    type="button"
+                    (click)="selOutcome('KEPT')"
+                    class="px-4 py-3 text-left font-bold hover:bg-neo-lime"
+                    [ngClass]="{ 'bg-neo-lime': catchForm.get('outcome')?.value === 'KEPT' }"
+                  >
+                    Abatido
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
           <div>
             <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
               >A História da Pescaria (Opcional)</label
-            >
-            <textarea
+            ><textarea
               formControlName="notes"
               rows="4"
-              placeholder="Como foi a briga com o peixe? Algum perrengue ou detalhe engraçado?"
+              placeholder="..."
               class="neo-input resize-none"
             ></textarea>
           </div>
@@ -223,9 +415,8 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
               type="file"
               accept="image/*"
               (change)="onFileSelected($event)"
-              class="absolute inset-0 opacity-0 cursor-pointer z-50 w-full h-full"
+              class="absolute inset-0 opacity-0 cursor-pointer z-[460] w-full h-full"
             />
-
             <div
               *ngIf="!imagemPreview"
               class="flex flex-col items-center gap-3 pointer-events-none"
@@ -254,7 +445,6 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
                 Clique ou arraste a imagem aqui
               </p>
             </div>
-
             <div
               *ngIf="imagemPreview"
               class="w-full relative pointer-events-none flex flex-col items-center"
@@ -316,14 +506,61 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
         />
 
         <div *ngIf="tipoModalCadastro === 'EQUIPMENT'" class="flex flex-col gap-4 mb-6">
-          <select
-            [(ngModel)]="novoEquipamentoTipo"
-            class="neo-input neo-select text-center cursor-pointer"
-          >
-            <option value="" disabled selected>Selecione o Tipo...</option>
-            <option value="MOLINETE">Molinete</option>
-            <option value="CARRETILHA">Carretilha</option>
-          </select>
+          <div class="relative text-left">
+            <button
+              type="button"
+              (click)="ddModalEquip = !ddModalEquip"
+              class="neo-input w-full text-center flex justify-between items-center cursor-pointer bg-white relative z-[511]"
+            >
+              <span class="block truncate mx-auto">{{
+                novoEquipamentoTipo === 'CARRETILHA'
+                  ? 'Carretilha'
+                  : novoEquipamentoTipo === 'MOLINETE'
+                    ? 'Molinete'
+                    : 'Selecione o Tipo...'
+              }}</span>
+              <svg
+                class="w-5 h-5 text-neo-ink pointer-events-none transition-transform absolute right-4"
+                [class.rotate-180]="ddModalEquip"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="3"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
+            <div
+              *ngIf="ddModalEquip"
+              class="fixed inset-0 z-[510]"
+              (click)="ddModalEquip = false"
+            ></div>
+            <div
+              *ngIf="ddModalEquip"
+              class="absolute left-0 right-0 top-[calc(100%+8px)] z-[515] bg-white border-[3px] border-neo-ink rounded-xl shadow-[4px_4px_0px_0px_#1D2B1F] flex flex-col animate-scale-up"
+            >
+              <button
+                type="button"
+                (click)="selModalEquip('MOLINETE')"
+                class="px-4 py-3 text-center font-bold border-b-[2px] border-neo-ink/20 hover:bg-neo-lime"
+                [ngClass]="{ 'bg-neo-lime': novoEquipamentoTipo === 'MOLINETE' }"
+              >
+                Molinete
+              </button>
+              <button
+                type="button"
+                (click)="selModalEquip('CARRETILHA')"
+                class="px-4 py-3 text-center font-bold hover:bg-neo-lime"
+                [ngClass]="{ 'bg-neo-lime': novoEquipamentoTipo === 'CARRETILHA' }"
+              >
+                Carretilha
+              </button>
+            </div>
+          </div>
           <input
             type="text"
             [(ngModel)]="novoItemNome"
@@ -334,9 +571,8 @@ type ModalType = 'FISH' | 'RIVER' | 'BAIT' | 'EQUIPMENT' | '';
 
         <div class="flex gap-4">
           <button type="button" (click)="fecharModal()" class="neo-btn neo-btn-outline flex-1">
-            Voltar
-          </button>
-          <button
+            Voltar</button
+          ><button
             type="button"
             (click)="salvarItemRapido()"
             class="neo-btn flex-1"
@@ -391,6 +627,13 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
   equipamentos: Equipment[] = [];
   salvando = false;
 
+  ddFish = false;
+  ddRiver = false;
+  ddBait = false;
+  ddEquip = false;
+  ddOutcome = false;
+  ddModalEquip = false;
+
   private formMap: L.Map | undefined;
   private currentMarker: L.Marker | undefined;
 
@@ -434,9 +677,61 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit(): void {
     this.carregarDadosIniciais();
   }
-
   ngAfterViewInit(): void {
     this.initFormMap();
+  }
+
+  getFishName(): string {
+    const v = this.catchForm.get('fishId')?.value;
+    return v
+      ? this.peixes.find((x) => x.id === v)?.commonName || 'Selecione...'
+      : 'Selecione a espécie...';
+  }
+  selFish(id: number): void {
+    this.catchForm.patchValue({ fishId: id });
+    this.ddFish = false;
+  }
+
+  getRiverName(): string {
+    const v = this.catchForm.get('riverId')?.value;
+    return v ? this.rios.find((x) => x.id === v)?.name || 'Selecione...' : 'Selecione o rio...';
+  }
+  selRiver(id: number): void {
+    this.catchForm.patchValue({ riverId: id });
+    this.ddRiver = false;
+  }
+
+  getBaitName(): string {
+    const v = this.catchForm.get('baitId')?.value;
+    return v ? this.iscas.find((x) => x.id === v)?.name || 'Sem isca' : 'Sem isca';
+  }
+  selBait(id: number | string): void {
+    this.catchForm.patchValue({ baitId: id });
+    this.ddBait = false;
+  }
+
+  getEquipName(): string {
+    const v = this.catchForm.get('equipmentId')?.value;
+    if (!v) return 'Não informar';
+    const e = this.equipamentos.find((x) => x.id === v);
+    return e ? `${e.type} - Ação ${e.action}` : 'Não informar';
+  }
+  selEquip(id: number | string): void {
+    this.catchForm.patchValue({ equipmentId: id });
+    this.ddEquip = false;
+  }
+
+  getOutcomeName(): string {
+    return this.catchForm.get('outcome')?.value === 'KEPT' ? 'Abatido' : 'Pesque & Solte';
+  }
+  selOutcome(v: string): void {
+    this.catchForm.patchValue({ outcome: v });
+    this.ddOutcome = false;
+  }
+
+  selModalEquip(v: string): void {
+    this.novoEquipamentoTipo = v;
+    this.ddModalEquip = false;
   }
 
   carregarDadosIniciais(): void {
@@ -459,41 +754,22 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private initFormMap(): void {
-    this.formMap = L.map('formMap', {
-      center: [-29.7171, -52.4253],
-      zoom: 10,
-      minZoom: 6,
-    });
-
+    this.formMap = L.map('formMap', { center: [-29.7171, -52.4253], zoom: 10, minZoom: 6 });
     L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-      {
-        maxZoom: 19,
-        attribution: 'Tiles © Esri',
-      },
+      { maxZoom: 19, attribution: 'Tiles © Esri' },
     ).addTo(this.formMap);
-
     this.formMap.on('click', (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
-
-      this.catchForm.patchValue({
-        latitude: lat,
-        longitude: lng,
-      });
-
-      if (this.currentMarker) {
-        this.formMap?.removeLayer(this.currentMarker);
-      }
-
+      this.catchForm.patchValue({ latitude: lat, longitude: lng });
+      if (this.currentMarker) this.formMap?.removeLayer(this.currentMarker);
       const targetIcon = L.divIcon({
         className: 'bg-transparent',
         html: `<div class="w-5 h-5 bg-neo-rust border-[3px] border-neo-ink rounded-full shadow-[4px_4px_0px_0px_#1D2B1F] animate-pulse"></div>`,
         iconSize: [20, 20],
         iconAnchor: [10, 10],
       });
-
       this.currentMarker = L.marker([lat, lng], { icon: targetIcon }).addTo(this.formMap!);
-
       this.cdr.detectChanges();
     });
   }
@@ -518,7 +794,6 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
     this.modalAberto = true;
     this.carregandoModal = false;
   }
-
   fecharModal(): void {
     this.modalAberto = false;
   }
@@ -526,7 +801,6 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
   salvarItemRapido(): void {
     if (!this.novoItemNome.trim()) return;
     this.carregandoModal = true;
-
     if (this.tipoModalCadastro === 'FISH') {
       this.fishService
         .criar({ commonName: this.novoItemNome, scientificName: 'Não informado' })
@@ -562,7 +836,6 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
         action: this.novoItemNome,
         recommendedLineWeight: 'Não informado',
       };
-
       this.equipmentService.criar(payload).subscribe({
         next: (novoEq) => {
           this.equipamentos.push(novoEq);
@@ -579,7 +852,6 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
     this.fecharModal();
     this.cdr.detectChanges();
   }
-
   private erroModal(): void {
     alert('Erro ao salvar item rápido no servidor.');
     this.carregandoModal = false;
@@ -589,7 +861,6 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
   salvar(): void {
     if (this.catchForm.invalid) return;
     this.salvando = true;
-
     if (this.arquivoSelecionado) {
       this.fazendoUploadFoto = true;
       this.imageService.uploadImage(this.arquivoSelecionado).subscribe({
@@ -599,8 +870,7 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
           this.enviarParaOBanco();
         },
         error: (err) => {
-          console.error('Erro no upload da imagem', err);
-          alert('Erro ao fazer upload da imagem para o Cloudinary.');
+          alert('Erro ao fazer upload da imagem.');
           this.fazendoUploadFoto = false;
           this.salvando = false;
           this.cdr.detectChanges();
@@ -613,7 +883,6 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
 
   private enviarParaOBanco(): void {
     const formValue = this.catchForm.value;
-
     const payload: CatchRecordPayload = {
       ...formValue,
       spotName: formValue.spotName,
@@ -627,18 +896,13 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
       lengthInCm: formValue.lengthInCm ? Number(formValue.lengthInCm) : undefined,
       notes: formValue.notes,
     };
-
     this.catchRecordService.salvarCaptura(payload).subscribe({
       next: () => {
         this.salvando = false;
         this.router.navigate(['/diario']);
       },
       error: (err) => {
-        console.error('Erro ao salvar captura:', err);
-        alert(
-          'O Java recusou o salvamento:\n' +
-            (err.error?.message || err.message || 'Erro desconhecido. Verifique o F12.'),
-        );
+        alert('O Java recusou o salvamento.');
         this.salvando = false;
         this.cdr.detectChanges();
       },
@@ -648,16 +912,12 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
   cancelar(): void {
     this.router.navigate(['/diario']);
   }
-
   private dataAtualFormatada(): string {
     const agora = new Date();
     agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
     return agora.toISOString().slice(0, 16);
   }
-
   ngOnDestroy(): void {
-    if (this.formMap) {
-      this.formMap.remove();
-    }
+    if (this.formMap) this.formMap.remove();
   }
 }

@@ -22,20 +22,59 @@ import { FishingSpot, FishingSpotPayload, River } from '../core/models/api-model
         <div class="neo-card p-8 flex flex-col h-fit">
           <h3 class="text-2xl font-serif font-black text-neo-ink mb-6">Novo Local</h3>
           <form [formGroup]="spotForm" (ngSubmit)="salvar()" class="flex flex-col gap-5">
-            <div>
+            <div class="relative">
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Rio Associado *</label
               >
-              <select formControlName="riverId" class="neo-input neo-select cursor-pointer">
-                <option value="" disabled selected>Selecione um rio...</option>
-                <option *ngFor="let rio of riosDisponiveis" [value]="rio.id">{{ rio.name }}</option>
-              </select>
+              <button
+                type="button"
+                (click)="ddRio = !ddRio"
+                class="neo-input w-full text-left flex justify-between items-center cursor-pointer bg-white relative z-[51]"
+              >
+                <span class="block truncate">{{ getRioNome() }}</span>
+                <svg
+                  class="w-5 h-5 text-neo-ink pointer-events-none transition-transform"
+                  [class.rotate-180]="ddRio"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </button>
+
+              <div *ngIf="ddRio" class="fixed inset-0 z-[50]" (click)="ddRio = false"></div>
+              <div
+                *ngIf="ddRio"
+                class="absolute left-0 right-0 top-[calc(100%+8px)] z-[55] bg-white border-[3px] border-neo-ink rounded-xl shadow-[4px_4px_0px_0px_#1D2B1F] flex flex-col max-h-48 overflow-y-auto custom-scrollbar animate-scale-up"
+              >
+                <button
+                  type="button"
+                  *ngFor="let r of riosDisponiveis"
+                  (click)="selRio(r.id)"
+                  class="px-4 py-3 text-left font-bold text-neo-ink hover:bg-neo-lime transition-colors border-b-[2px] border-neo-ink/20 last:border-b-0"
+                  [ngClass]="{ 'bg-neo-lime': spotForm.get('riverId')?.value === r.id }"
+                >
+                  {{ r.name }}
+                </button>
+                <div
+                  *ngIf="riosDisponiveis.length === 0"
+                  class="px-4 py-3 text-sm font-bold text-neo-muted text-center"
+                >
+                  Nenhum rio cadastrado
+                </div>
+              </div>
             </div>
+
             <div>
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Nome do Local *</label
-              >
-              <input
+              ><input
                 type="text"
                 formControlName="name"
                 placeholder="Ex: Curva do Jacuí"
@@ -46,8 +85,7 @@ import { FishingSpot, FishingSpotPayload, River } from '../core/models/api-model
               <div>
                 <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                   >Lat *</label
-                >
-                <input
+                ><input
                   type="number"
                   step="any"
                   formControlName="latitude"
@@ -57,8 +95,7 @@ import { FishingSpot, FishingSpotPayload, River } from '../core/models/api-model
               <div>
                 <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                   >Lng *</label
-                >
-                <input
+                ><input
                   type="number"
                   step="any"
                   formControlName="longitude"
@@ -69,8 +106,7 @@ import { FishingSpot, FishingSpotPayload, River } from '../core/models/api-model
             <div>
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Acesso (Opcional)</label
-              >
-              <input
+              ><input
                 type="text"
                 formControlName="accessType"
                 placeholder="Ex: Barco, Barranco..."
@@ -80,11 +116,10 @@ import { FishingSpot, FishingSpotPayload, River } from '../core/models/api-model
             <div>
               <label class="block text-sm font-black text-neo-ink uppercase tracking-wider mb-2"
                 >Descrição / Dicas do Local</label
-              >
-              <textarea
+              ><textarea
                 formControlName="description"
                 rows="2"
-                placeholder="Ex: Fundo de pedra, muita galhada na margem direita..."
+                placeholder="Ex: Fundo de pedra..."
                 class="neo-input resize-none"
               ></textarea>
             </div>
@@ -140,7 +175,7 @@ import { FishingSpot, FishingSpotPayload, River } from '../core/models/api-model
 
       <div
         *ngIf="idParaExcluir !== null"
-        class="fixed inset-0 bg-neo-ink/80 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-neo-ink/80 flex items-center justify-center z-[100] p-4"
       >
         <div
           class="neo-card max-w-sm w-full p-8 flex flex-col items-center text-center animate-scale-up bg-white"
@@ -151,9 +186,8 @@ import { FishingSpot, FishingSpotPayload, River } from '../core/models/api-model
           </p>
           <div class="flex gap-4 w-full">
             <button (click)="fecharModalExclusao()" class="neo-btn neo-btn-outline flex-1">
-              Cancelar
-            </button>
-            <button (click)="confirmarExclusao()" class="neo-btn neo-btn-danger flex-1">
+              Cancelar</button
+            ><button (click)="confirmarExclusao()" class="neo-btn neo-btn-danger flex-1">
               Excluir
             </button>
           </div>
@@ -182,7 +216,7 @@ import { FishingSpot, FishingSpotPayload, River } from '../core/models/api-model
         }
       }
       .animate-fade-in {
-        animation: fadeIn 0.2s ease-out forwards;
+        animation: fadeIn 0.15s ease-out forwards;
       }
       .animate-scale-up {
         animation: scaleUp 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -197,6 +231,8 @@ export class FishingSpotManagementComponent implements OnInit {
   carregando = true;
   salvando = false;
   idParaExcluir: number | null = null;
+
+  ddRio = false;
 
   constructor(
     private fb: FormBuilder,
@@ -219,6 +255,18 @@ export class FishingSpotManagementComponent implements OnInit {
     this.carregarRiosParaODropdown();
   }
 
+  getRioNome(): string {
+    const id = this.spotForm.get('riverId')?.value;
+    if (!id) return 'Selecione um rio...';
+    const r = this.riosDisponiveis.find((x) => x.id === Number(id));
+    return r ? r.name : 'Selecione um rio...';
+  }
+
+  selRio(id: number): void {
+    this.spotForm.patchValue({ riverId: id });
+    this.ddRio = false;
+  }
+
   carregarLocais(): void {
     this.fishingSpotService.listarLocais(0, 50).subscribe({
       next: (p) => {
@@ -226,13 +274,8 @@ export class FishingSpotManagementComponent implements OnInit {
         this.carregando = false;
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.carregando = false;
-        this.cdr.detectChanges();
-      },
     });
   }
-
   carregarRiosParaODropdown(): void {
     this.riverService.listarRios(0, 100).subscribe({
       next: (p) => {
@@ -258,10 +301,6 @@ export class FishingSpotManagementComponent implements OnInit {
         this.salvando = false;
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.salvando = false;
-        this.cdr.detectChanges();
-      },
     });
   }
 
@@ -271,7 +310,6 @@ export class FishingSpotManagementComponent implements OnInit {
   fecharModalExclusao(): void {
     this.idParaExcluir = null;
   }
-
   confirmarExclusao(): void {
     if (this.idParaExcluir === null) return;
     this.fishingSpotService.excluirLocal(this.idParaExcluir).subscribe({
@@ -280,7 +318,6 @@ export class FishingSpotManagementComponent implements OnInit {
         this.fecharModalExclusao();
         this.cdr.detectChanges();
       },
-      error: () => this.fecharModalExclusao(),
     });
   }
 }
