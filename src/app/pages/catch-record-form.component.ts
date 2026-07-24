@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router'; // Adicionado ActivatedRoute
 import * as L from 'leaflet';
 import { CatchRecordService } from '../core/services/catch-record.service';
 import { FishService } from '../core/services/fish.service';
@@ -654,6 +654,7 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
     private baitService: BaitService,
     private equipmentService: EquipmentService,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private imageService: ImageService,
   ) {
@@ -676,7 +677,20 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnInit(): void {
     this.carregarDadosIniciais();
+
+    this.route.queryParams.subscribe((params) => {
+      if (params['lat'] && params['lng']) {
+        this.catchForm.patchValue({
+          latitude: Number(params['lat']),
+          longitude: Number(params['lng']),
+        });
+      }
+      if (params['riverId']) {
+        this.catchForm.patchValue({ riverId: Number(params['riverId']) });
+      }
+    });
   }
+
   ngAfterViewInit(): void {
     this.initFormMap();
   }
@@ -754,11 +768,35 @@ export class CatchRecordFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private initFormMap(): void {
-    this.formMap = L.map('formMap', { center: [-29.7171, -52.4253], zoom: 10, minZoom: 6 });
+    let startLat = -29.7171;
+    let startLng = -52.4253;
+    let zoom = 10;
+
+    const fLat = this.catchForm.get('latitude')?.value;
+    const fLng = this.catchForm.get('longitude')?.value;
+
+    if (fLat && fLng) {
+      startLat = fLat;
+      startLng = fLng;
+      zoom = 15;
+    }
+
+    this.formMap = L.map('formMap', { center: [startLat, startLng], zoom: zoom, minZoom: 6 });
     L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
       { maxZoom: 19, attribution: 'Tiles © Esri' },
     ).addTo(this.formMap);
+
+    if (fLat && fLng) {
+      const targetIcon = L.divIcon({
+        className: 'bg-transparent',
+        html: `<div class="w-5 h-5 bg-neo-rust border-[3px] border-neo-ink rounded-full shadow-[4px_4px_0px_0px_#1D2B1F] animate-pulse"></div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+      });
+      this.currentMarker = L.marker([fLat, fLng], { icon: targetIcon }).addTo(this.formMap!);
+    }
+
     this.formMap.on('click', (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
       this.catchForm.patchValue({ latitude: lat, longitude: lng });
